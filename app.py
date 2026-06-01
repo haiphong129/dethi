@@ -122,6 +122,9 @@ def thongke(fn):
                     })
 
     return ds
+@app.route("/health")
+def health():
+    return "OK"
 # --------------------
 # Auth
 # --------------------
