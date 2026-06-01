@@ -41,7 +41,7 @@
 
         {% endif %}
 
-        {% for p in pagination.iter_pages() %}
+        {% for p in pagination.iter_pages(left_edge=1,left_current=2,right_current=2, right_edge=1) %}
 
             {% if p %}
 

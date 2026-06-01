@@ -907,10 +907,14 @@ def backup_db():
 
     subprocess.run([
         r"C:\Program Files\PostgreSQL\18\bin\pg_dump.exe",
+        "-F", "c",          # custom format
+        "-v",               # verbose
+        "--no-owner",
+        "--no-privileges",
         db_url,
         "-f",
         filepath
-    ])
+        ],check=True)
 
     print(f"Backup created: {filepath}")
 # --------------------

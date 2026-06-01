@@ -7,7 +7,7 @@
     <table class="table table-bordered">
     <tr>
         <th class="text-center fw-bold">Tiêu đề</th>
-        <th class="text-center fw-bold">Link rút gọn</th>
+        <th class="text-center fw-bold">Tải về</th>
         <th class="text-center fw-bold">clicks</th>
         {% if session.get('user_id') and session.get('role') == 'admin' %}
             <th class="text-center fw-bold">Hành động</th>
@@ -16,15 +16,20 @@
 
     {% for l in links %}
     <tr>
-        <td>
+        <td >
             {{ loop.index + (pagination.page - 1) * pagination.per_page }}.  
             {%if l.original_url %}
                 <a href="{{l.original_url }}" target="_blank" class="text-decoration-none text-primary">{{ l.title|safe }}</a>
             {%else%}
                 <span class="">{{ l.title|safe }}</span>
             {% endif %}
+            
         </td>
-        <td><a href="{{ request.host_url }}{{ l.short_code }}" target="_blank">{{ request.host_url }}{{ l.short_code }}</a></td>
+        <td style="text-align:center; vertical-align:middle;">
+            <a href="{{ request.host_url }}{{ l.short_code }}" target="_blank" >
+                    <i class="fas fa-download" style="color: #041cf8; font-size: 1.3em;"></i>
+            </a>
+        </td>
         <td class="text-center">{{ l.clicks }}</td>
         {% if session.get('user_id') and session.get('role') == 'admin' %}
         <td>
