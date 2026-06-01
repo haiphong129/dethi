@@ -1,0 +1,404 @@
+--
+-- PostgreSQL database dump
+--
+
+\restrict GEDQbtzMuWrQBtXGJR4a7W4ssZnk8zeG8RsNUtsPfH0EEIMyL3yYZ4dtgLIzj3P
+
+-- Dumped from database version 18.3
+-- Dumped by pg_dump version 18.3
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: public; Type: SCHEMA; Schema: -; Owner: postgres
+--
+
+-- *not* creating schema, since initdb creates it
+
+
+ALTER SCHEMA public OWNER TO postgres;
+
+--
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: postgres
+--
+
+COMMENT ON SCHEMA public IS '';
+
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: alembic_version; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.alembic_version (
+    version_num character varying(32) NOT NULL
+);
+
+
+ALTER TABLE public.alembic_version OWNER TO postgres;
+
+--
+-- Name: click_log; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.click_log (
+    id integer NOT NULL,
+    link_id integer,
+    user_id integer,
+    country character varying(100),
+    device character varying(50),
+    revenue double precision,
+    created_at timestamp without time zone
+);
+
+
+ALTER TABLE public.click_log OWNER TO postgres;
+
+--
+-- Name: click_log_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.click_log_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.click_log_id_seq OWNER TO postgres;
+
+--
+-- Name: click_log_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.click_log_id_seq OWNED BY public.click_log.id;
+
+
+--
+-- Name: link; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.link (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    original_url character varying(500) NOT NULL,
+    short_code character varying(10),
+    clicks integer,
+    title character varying(200),
+    created_at timestamp without time zone
+);
+
+
+ALTER TABLE public.link OWNER TO postgres;
+
+--
+-- Name: link_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.link_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.link_id_seq OWNER TO postgres;
+
+--
+-- Name: link_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.link_id_seq OWNED BY public.link.id;
+
+
+--
+-- Name: user; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."user" (
+    id integer NOT NULL,
+    username character varying(50) NOT NULL,
+    password character varying(200) NOT NULL,
+    role character varying(20)
+);
+
+
+ALTER TABLE public."user" OWNER TO postgres;
+
+--
+-- Name: user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.user_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.user_id_seq OWNER TO postgres;
+
+--
+-- Name: user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.user_id_seq OWNED BY public."user".id;
+
+
+--
+-- Name: click_log id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.click_log ALTER COLUMN id SET DEFAULT nextval('public.click_log_id_seq'::regclass);
+
+
+--
+-- Name: link id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.link ALTER COLUMN id SET DEFAULT nextval('public.link_id_seq'::regclass);
+
+
+--
+-- Name: user id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."user" ALTER COLUMN id SET DEFAULT nextval('public.user_id_seq'::regclass);
+
+
+--
+-- Data for Name: alembic_version; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.alembic_version (version_num) FROM stdin;
+fedd9856f497
+\.
+
+
+--
+-- Data for Name: click_log; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.click_log (id, link_id, user_id, country, device, revenue, created_at) FROM stdin;
+1	1	1	Vietnam	Desktop	0.002	2026-04-30 11:04:30.996506
+2	1	1	Vietnam	Desktop	0.002	2026-04-30 11:06:17.292688
+3	1	1	Vietnam	Desktop	0.002	2026-04-30 16:28:48.149233
+4	1	1	Vietnam	Desktop	0.002	2026-04-30 16:29:25.439324
+5	1	1	Vietnam	Desktop	0.002	2026-04-30 16:29:54.989897
+6	1	1	Vietnam	Desktop	0.002	2026-04-30 16:32:05.013728
+7	1	1	Vietnam	Desktop	0.002	2026-04-30 16:34:55.178021
+8	1	1	Vietnam	Desktop	0.002	2026-04-30 16:37:52.186259
+9	1	1	Vietnam	Desktop	0.002	2026-04-30 16:43:01.142538
+10	1	1	Vietnam	Desktop	0.002	2026-04-30 16:47:06.17581
+11	1	1	Vietnam	Desktop	0.002	2026-04-30 16:50:49.828756
+12	1	1	Vietnam	Desktop	0.002	2026-04-30 16:53:44.481592
+13	1	1	Vietnam	Desktop	0.002	2026-04-30 16:54:57.974569
+14	2	1	Vietnam	Desktop	0.002	2026-05-01 15:57:42.247131
+15	2	1	Vietnam	Desktop	0.002	2026-05-01 16:20:38.049509
+16	2	1	Vietnam	Desktop	0.002	2026-05-01 16:21:09.470498
+17	3	1	Vietnam	Desktop	0.002	2026-05-01 17:58:47.206389
+18	8	1	Vietnam	Desktop	0.002	2026-05-02 16:28:49.659328
+19	2	1	Vietnam	Desktop	0.002	2026-05-02 16:39:00.65641
+20	10	1	Vietnam	Desktop	0.002	2026-05-04 09:57:19.612348
+21	3	1	Vietnam	Desktop	0.002	2026-05-04 10:00:16.40899
+22	32	1	Vietnam	Desktop	0.002	2026-05-06 16:14:47.663074
+23	31	1	Vietnam	Desktop	0.002	2026-05-06 16:20:43.619603
+24	13	1	Vietnam	Desktop	0.002	2026-05-06 16:23:04.426443
+25	29	1	Vietnam	Desktop	0.002	2026-05-07 10:20:14.204308
+26	27	1	Vietnam	Desktop	0.002	2026-05-07 10:21:18.257691
+27	34	1	Vietnam	Desktop	0.002	2026-05-07 10:28:58.693003
+28	14	1	Vietnam	Desktop	0.002	2026-05-07 10:37:00.575505
+29	33	1	Vietnam	Desktop	0.002	2026-05-07 11:24:04.093881
+30	34	1	Vietnam	Desktop	0.002	2026-05-07 11:24:59.486159
+31	5	1	Vietnam	Desktop	0.002	2026-05-07 11:26:22.732138
+32	11	1	Vietnam	Desktop	0.002	2026-05-07 11:27:39.635653
+33	52	1	Vietnam	Desktop	0.002	2026-05-08 20:08:23.747354
+34	51	1	Vietnam	Desktop	0.002	2026-05-08 22:53:15.629868
+\.
+
+
+--
+-- Data for Name: link; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.link (id, user_id, original_url, short_code, clicks, title, created_at) FROM stdin;
+2	1	https://drive.google.com/drive/folders/1xezMMsqRRHshbzW86rTe4M2V9i-9PBkH?usp=sharing	ohJii3	4	Đề thi HSG THPT TP Hải Phòng năm học 2016-2017 - Bảng Chuyên	2026-05-01 15:56:12.334547
+3	1	https://drive.google.com/drive/folders/1qdgpeWZeqpythHxWl3HsoFzmHrMEXtX0?usp=drive_link	oGtZy3	2	Đề thi HSG THPT TP Hải Phòng năm học 2015-2016 - bảng A1	2026-05-01 16:23:48.273896
+4	1	https://drive.google.com/drive/folders/1T-k44Cls2wBpT319AdkhK2ruQamWuAHw?usp=drive_link	vJZbJo	0	Đề thi HSG THPT TP Hải Phòng năm học 2017-2018 - bảng Chuyên	2026-05-01 16:26:56.366528
+5	1	https://drive.google.com/drive/folders/1Rtppz1m48GEPNbtq_e_tyhpvFnMHj5Jx?usp=drive_link	FIm89u	1	Đề thi HSG THPT TP Hải Phòng năm học 2021-2022	2026-05-02 16:03:27.722087
+6	1	https://drive.google.com/drive/folders/1JdaNoJNurQYx_YsGmL9PgIraUWgC1-E8?usp=drive_link	mW2mqY	0	Đề thi HSG Chọn đội tuyển QG TP Hải Phòng năm học 2018-2019 - Ngày 1	2026-05-02 16:15:33.653293
+7	1	https://drive.google.com/drive/folders/1Sf5re7KsHD1PzKmkhmgsrymRPiUYOBvS?usp=drive_link	SD6ZpS	0	Đề thi HSG Chọn đội tuyển QG TP Hải Phòng năm học 2018-2019 - Ngày 2	2026-05-02 16:20:47.178381
+8	1	https://drive.google.com/drive/folders/1Uva-uaVo_s1krAOeisl9tV4UCE5xdBlf?usp=drive_link	FM33zm	1	Đề thi HSG Chọn đội tuyển QG TP Hải Phòng năm học 2019-2020 - Ngày 1	2026-05-02 16:26:46.858893
+9	1	https://drive.google.com/drive/folders/1xJqpwNLo58LUs1x5nKxXB-xdFpl82HeC?usp=drive_link	KdfCHm	0	Đề thi HSG Chọn đội tuyển QG TP Hải Phòng năm học 2019-2020 - Ngày 2	2026-05-02 16:28:03.854779
+10	1	https://drive.google.com/drive/folders/1NgeiInwyeFA1nyAe-n6wzsrn0lJWpnay?usp=drive_link	2uhtex	1	Đề thi HSG Chọn đội tuyển QG TP Hải Phòng năm học 2021-2022	2026-05-02 17:01:44.419147
+12	1	https://drive.google.com/drive/folders/18k3ra1HoZIWJf6by_4zfiONsuFVA95_V?usp=drive_link	BJ6Juu	0	Đề thi HSG Chọn đội tuyển QG TP Hải Phòng năm học 2022-2023	2026-05-04 08:59:13.686139
+13	1	https://drive.google.com/drive/folders/1F64r2SlHmJMziahDzTnFpLULtjYnFmbU?usp=drive_link	8ibSEE	1	Đề thi HSG Chọn đội tuyển QG TP Hải Phòng năm học 2023-2024	2026-05-04 09:08:34.197614
+14	1	https://drive.google.com/drive/folders/1wxpo1kUV8TtdIB81FqLH9vS4oMH__Q47?usp=drive_link	9tT6c0	1	Đề thi HSG THCS TP Hải Phòng năm học 2023-2024	2026-05-04 09:09:38.395263
+15	1	https://drive.google.com/drive/folders/1mfR0nxEU0ynWjBLxj1yv3CF1YM8mQi14?usp=sharing	VT9RbN	0	Đề thi HSG Chọn đội tuyển QG TP Hải Phòng năm học 2024-2025 - Ngày 1	2026-05-04 09:55:50.175501
+16	1	https://drive.google.com/drive/folders/1Qhdj-QMRx9jnm9Eu9QyJW__Lf5ZvQWRX?usp=drive_link	iFdqdZ	0	Đề thi HSG THPT TP Hải Phòng năm học 2016-2017 - Bảng không chuyên	2026-05-06 14:44:59.649928
+17	1	https://drive.google.com/drive/folders/1LN8MmCIay9yalE-TrXaolD9Z-NvQjMhO?usp=drive_link	G6yZiZ	0	Đề thi HSG THPT TP Hải Phòng năm học 2017-2018 - Bảng không chuyên	2026-05-06 15:21:54.570949
+18	1	https://drive.google.com/drive/folders/1y2CsQyZfBlTb2KmoHrocAwox6jUI9A_F?usp=drive_link	ITD40w	0	Đề thi HSG THPT TP Hải Phòng năm học 2018-2019 - Bảng B	2026-05-06 15:24:38.964457
+19	1	https://drive.google.com/drive/folders/1h2cmejMkZP2tvlc1NSBt90M7aEabvyaf?usp=drive_link	a8rGHC	0	Đề thi HSG THPT TP Hải Phòng năm học 2019-2020 - Bảng không chuyên	2026-05-06 15:28:51.043419
+20	1	https://drive.google.com/drive/folders/1yknRFbtH0HyyoWSndn1ZqyYYRP2YSZqD?usp=sharing	ck9ICX	0	Đề thi HSG THPT TP Hải Phòng năm học 2020-2021 - Bảng B	2026-05-06 15:31:23.03388
+21	1	https://drive.google.com/drive/folders/1n5ftHXvCRcD5Lkr6PpreeH9wERPD2laE?usp=sharing	TMUhh0	0	Đề thi HSG THPT TP Hải Phòng năm học 2021-2022 - Bảng B	2026-05-06 15:33:31.098504
+22	1	https://drive.google.com/drive/folders/1h72WB2qTzi_WLioO56rhvZMvPw-zzlyL?usp=sharing	OdrNnH	0	Đề thi HSG THPT TP Hải Phòng năm học 2022-2023	2026-05-06 15:35:42.466932
+23	1	https://drive.google.com/drive/folders/1b8a2hYlJgTjYsgWp4G_OYcX_yerzYmtj?usp=sharing	77umFW	0	Đề thi HSG THPT TP Hải Phòng năm học 2023-2024	2026-05-06 15:37:58.638573
+24	1	https://drive.google.com/drive/folders/1fNey-pVBN7krHNkk9DShVSAP57FWHd8I?usp=sharing	4HKMAJ	0	Đề thi HSG THPT TP Hải Phòng năm học 2024-2025	2026-05-06 15:40:00.54742
+25	1	https://drive.google.com/drive/folders/1mbTgUBnbh2J4INE1_iU2GcWEPpALkTjX?usp=sharing	0xnucb	0	Đề thi HSG Chọn đội tuyển QG tỉnh Quảng Ninh năm học 2023-2024 - Ngày 1	2026-05-06 15:46:56.246123
+26	1	https://drive.google.com/drive/folders/1cbmj9z4zYkllE1TQVMjmlQ0MmwZyRd98?usp=drive_link	i0WlM1	0	Đề thi HSG THPT tỉnh Bắc Giang năm học 2021-2022	2026-05-06 15:56:00.354832
+27	1	https://drive.google.com/drive/folders/1Ai5YYDO_syX3Vt9a9BD7sPMWgRZ6xQLz?usp=sharing	gTi251	1	Đề thi HSG THPT tỉnh Bắc Giang năm học 2022-2023 - Lớp 11	2026-05-06 15:57:55.611966
+28	1	https://drive.google.com/drive/folders/1-z5KYrnIav4TnhWFCAFB__MZvwqQj4hw?usp=sharing	nmWXOu	0	Đề thi HSG THCS tỉnh Bà Rịa - Vũng Tàu năm học 2023-2024	2026-05-06 16:01:03.315268
+29	1	https://drive.google.com/drive/folders/15wf3b0fCZb9u8kEg69mLNQqV4AVO34Yr?usp=sharing	zjTTmT	1	Đề thi HSG THPT tỉnh Bình Phước năm học 2018-2019	2026-05-06 16:05:39.573971
+30	1	https://drive.google.com/drive/folders/15Ma5I_896IxR_ulSRL_FxCTh64S2rWXO?usp=sharing	gAAhoV	0	Đề thi HSG THPT tỉnh Bình Phước năm học 2021-2022	2026-05-06 16:07:32.709003
+31	1	https://drive.google.com/drive/folders/1al0V0gZLpNo_qSEHA7lQUmGmchboEjPO?usp=sharing	w1nQaL	1	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Bình Thuận năm học 2021-2022	2026-05-06 16:11:30.979801
+32	1	https://drive.google.com/drive/folders/1gOmjCOpDLnJIFO91tb9_KHLUFFzEPPij?usp=sharing	4yV1tA	1	Đề thi HSG THPT tỉnh Bình Thuận năm học 2021-2022	2026-05-06 16:13:04.687177
+33	1	https://drive.google.com/drive/folders/1AjpUPkQA3zgPBsDCwNhMlJNvsmluIDuK?usp=sharing	6Maa0X	1	Đề thi HSG THCS tỉnh Đắk Nông năm học 2018-2019	2026-05-07 10:24:22.780489
+35	1	https://drive.google.com/drive/folders/1h-rYJTraDF3LBdfGDNOziaYX0UFuitjK?usp=sharing	Py7ORS	0	Đề thi HSG THCS tỉnh Đắk Nông năm học 2022-2023	2026-05-07 10:27:25.445733
+36	1	https://drive.google.com/drive/folders/1PLQYf7ZJP-AiGCyJofSX0xOGUdeODla3?usp=sharing	fU19hC	0	Đề thi HSG THCS tỉnh Đồng Tháp năm học 2022-2023	2026-05-07 10:54:06.353804
+37	1	https://drive.google.com/drive/folders/1foG1mVXveBt4bMp1afZ7FfWuioYNrw8a?usp=sharing	XUdSl9	0	Đề thi HSG THPT tỉnh Gia Lai năm học 2020-2021	2026-05-07 10:56:04.158118
+38	1	https://drive.google.com/drive/folders/1lHeC2T5w9p2NdZgn3uYuW8DWTdaIWiVS?usp=sharing	MQBH0g	0	Đề thi HSG THPT tỉnh Hải Dương năm học 2017-2018	2026-05-07 10:57:14.445517
+39	1	https://drive.google.com/drive/folders/18RyRqwUO-oYsJ1DINa2b-m3vxJH_dIDi?usp=sharing	wcgXZ9	0	Đề thi HSG THPT tỉnh Hải Dương năm học 2023-2024	2026-05-07 10:59:02.61432
+40	1	https://drive.google.com/drive/folders/1V-zwhjweuqYLR_K4vQ_wUlyrbFCYTj21?usp=sharing	iBtxps	0	Đề thi HSG THPT tỉnh Hà Nam năm học 2019-2020	2026-05-07 11:03:31.549183
+41	1	https://drive.google.com/drive/folders/1y4ETxx1SQIfJx9IEWN_OPEx-CUN_tV4H?usp=sharing	jHdrTV	0	Đề thi HSG THPT tỉnh Hà Nam năm học 2020-2021	2026-05-07 11:06:47.555024
+42	1	https://drive.google.com/drive/folders/1zG4spqFGCfY52--wu5oofCi8l91kk8yc?usp=sharing	BnAxLT	0	Đề thi HSG THCS tỉnh Đắk Nông năm học 2020-2021	2026-05-07 11:25:41.190678
+43	1	https://drive.google.com/drive/folders/1QwYXfVSGwo7fbF5Nh1TvmVE44ugNCFwM?usp=sharing	WXLopM	0	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Hà Nam năm học 2022-2023	2026-05-07 11:32:30.591951
+44	1	https://drive.google.com/drive/folders/12fIR6oTCDR2MeeXp15p42cggR1g6Srmi?usp=sharing	9TiYaD	0	Đề thi HSG THCS TP Hà Nội năm học 2013-2014	2026-05-07 14:36:16.864911
+45	1	https://drive.google.com/drive/folders/1XLqZaUyFnr9_htpNdoNYZddas5w1q8Rx?usp=sharing	k3uQRF	0	Đề thi HSG THCS TP Hà Nội năm học 2014-2015	2026-05-07 14:37:50.185551
+46	1	https://drive.google.com/drive/folders/12CkAms66a0uNWHzYuZYGYOPyhkYS8r7f?usp=sharing	7Rb9oe	0	Đề thi HSG THCS TP Hà Nội năm học 2016-2017	2026-05-07 14:39:15.336409
+47	1	https://drive.google.com/drive/folders/1trFhyTph33BA2AHqsHyHRjpBAIWvON2D?usp=sharing	5lX1a2	0	Đề thi HSG THCS TP Hà Nội năm học 2017-2018	2026-05-07 14:41:15.576895
+48	1	https://drive.google.com/drive/folders/11XPVd86Fxfe7ty-Pn31qKUu1FcAVzX0D?usp=sharing	kSYefH	0	Đề thi HSG THCS TP Hà Nội năm học 2020-2021	2026-05-07 14:43:08.352055
+49	1	https://drive.google.com/drive/folders/19-kZbSSzGcO2MLc68-lIvYLGgmLnZpWb?usp=sharing	UfP2pC	0	Đề thi HSG THCS TP Hà Nội năm học 2023-2024	2026-05-07 14:45:00.39837
+50	1	https://drive.google.com/drive/folders/18WvQotWku7HkQMgJDImw1KOGmFuGWpUP?usp=sharing	Rvr7Iv	0	Đề thi HSG THPT tỉnh Hà Tĩnh năm học 2023-2024 - Lớp 10	2026-05-07 14:47:19.759642
+52	1	https://drive.google.com/drive/folders/1ROK3an7DrlYODRn_gnnvDqyBhQI9jF0i?usp=sharing	0Dc3Ur	1	Đề thi HSG THCS tỉnh Hòa Bình năm học 2017-2018	2026-05-07 14:51:51.577318
+53	1	https://drive.google.com/drive/folders/1lQQiaNltwfvvnFT8HZJ0ifA_dxXrmlfZ?usp=sharing	fBH5sQ	0	Đề thi HSG THCS tỉnh Hòa Bình năm học 2020-2021	2026-05-07 14:53:32.849965
+54	1	https://drive.google.com/drive/folders/1yFBPwrZOtP1KTnE2DTg9HB_1lmmZUHqB?usp=sharing	WWSfkN	0	Đề thi HSG THCS tỉnh Hòa Bình năm học 2021-2022	2026-05-07 14:54:52.655247
+55	1	https://drive.google.com/drive/folders/1JzxII6AYVPr2J7HC_dCg3RxUIXgIP6DR?usp=sharing	W3okX3	0	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Hòa Bình năm học 2023-2024	2026-05-07 14:57:07.86676
+51	1	https://drive.google.com/drive/folders/1Y4C4wMnb3_URG4PRYqyQhCE_ZwkFMeL1?usp=sharing	HEZPVs	1	Đề thi HSG THPT tỉnh Hà Tĩnh năm học 2023-2024 - Lớp 12	2026-05-07 14:49:17.541631
+\.
+
+
+--
+-- Data for Name: user; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."user" (id, username, password, role) FROM stdin;
+1	admin	pbkdf2:sha256:600000$o87JLx8Q89dhOT1d$a272abb3d6baa4d77c780c1d00cccef74ca8d67b1c801829e5a044c4740718fb	admin
+\.
+
+
+--
+-- Name: click_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.click_log_id_seq', 34, true);
+
+
+--
+-- Name: link_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.link_id_seq', 55, true);
+
+
+--
+-- Name: user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.user_id_seq', 1, true);
+
+
+--
+-- Name: alembic_version alembic_version_pkc; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.alembic_version
+    ADD CONSTRAINT alembic_version_pkc PRIMARY KEY (version_num);
+
+
+--
+-- Name: click_log click_log_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.click_log
+    ADD CONSTRAINT click_log_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: link link_original_url_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.link
+    ADD CONSTRAINT link_original_url_key UNIQUE (original_url);
+
+
+--
+-- Name: link link_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.link
+    ADD CONSTRAINT link_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user user_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."user"
+    ADD CONSTRAINT user_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user user_username_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."user"
+    ADD CONSTRAINT user_username_key UNIQUE (username);
+
+
+--
+-- Name: ix_link_short_code; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX ix_link_short_code ON public.link USING btree (short_code);
+
+
+--
+-- Name: link link_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.link
+    ADD CONSTRAINT link_user_id_fkey FOREIGN KEY (user_id) REFERENCES public."user"(id);
+
+
+--
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE USAGE ON SCHEMA public FROM PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\unrestrict GEDQbtzMuWrQBtXGJR4a7W4ssZnk8zeG8RsNUtsPfH0EEIMyL3yYZ4dtgLIzj3P
+

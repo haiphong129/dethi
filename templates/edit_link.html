@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+{% if session.get('user_id') %}
+    {% if success %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ success }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endif %}
+    <div class="container py-2">
+        <div class="card shadow-sm mx-auto" style="max-width: 480px;">
+            <div class="card-body">
+                <h4 class="card-title mb-4">Sửa link rút gọn</h4>
+                <form method="post">
+                    <div class="mb-3">
+                        <label class="code-label" for="code">Code</label>
+                        <input id="code" name="code" type="text" class="form-control" placeholder="Code" value="{{link.short_code}}" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="url">Đường dẫn</label>
+                        <input id="url" name="url" type="url" class="form-control" placeholder="https://..." value="{{link.original_url}}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="title">Tiêu đề</label>
+                        <input id="title" name="title" class="form-control" placeholder="Tiêu đề" value="{{link.title}}">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                document.querySelector('form').submit();
+            }
+        });
+    </script>
+{% endif %}
+{% endblock %}

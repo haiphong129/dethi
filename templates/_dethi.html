@@ -1,0 +1,60 @@
+<h3>Danh sách <span class="text-success fw-bold">{{ links|length }}</span> Đề thi</h3>
+{% if pagination.pages > 1 %}
+    {% include '_pagination_dethi.html' %}
+{% endif %}
+<table class="table table-bordered">
+<tr>
+    <th class="text-center fw-bold">Đề thi học sinh giỏi</th>
+    <th class="text-center fw-bold">Tải về</th>
+    {% if session.get('user_id') and session.get('role') == 'admin' %}
+        <th class="text-center fw-bold">Hành động</th>
+    {% endif %}
+</tr>
+
+{% for l in links %}
+<tr>
+    <td>
+        {{ loop.index + (pagination.page - 1) * pagination.per_page }}.  
+        {%if l.original_url %}
+                <a href="{{l.original_url }}" target="_blank" class="text-decoration-none text-primary">{{ l.title }}</a>
+        {%else%}
+            <span class="">{{ l.title }}</span>
+        {% endif %}
+    </td>
+    <td>
+        <div class="d-flex flex-wrap gap-0 align-items-center" style="min-width:0">
+        {% if "http" in l.oj %}
+            <a href="{{ l.oj }}" target="_blank" class="btn btn-success btn-sm px-1 py-1 m-0 text-truncate" style="min-width:0; transform: scale(0.8); transform-origin: left center;">OJ</a>
+        {% else %}
+            <a href="{{ url_for('pushoj', code=l.oj) }}" target="_blank" class="btn btn-danger btn-sm px-1 py-1 m-0 text-truncate" style="min-width:0; transform: scale(0.8); transform-origin: left center;" title="Thêm link OJ">add OJ</a>
+        {% endif %}
+        {% if l.debai %}
+            <a href="{{ request.host_url }}{{ l.debai }}" target="_blank" class="btn btn-success btn-sm px-1 py-1 m-0 text-truncate" style="min-width:0; transform: scale(0.8); transform-origin: left center;">Đề bài</a>
+        {% endif %}
+        {% if l.huongdan %}
+            <a href="{{ request.host_url }}{{ l.huongdan }}" target="_blank" class="btn btn-warning btn-sm px-1 py-1 m-0 text-truncate" style="min-width:0; transform: scale(0.8); transform-origin: left center;">Hướng dẫn</a>
+        {% endif %}
+        {% for i in range(1,6) %}
+            {% if l["test"+i|string] %}
+                <a href="{{ request.host_url }}{{ l["test"+i|string] }}" target="_blank" class="btn btn-info btn-sm px-1 py-1 m-0 text-truncate" style="min-width:0; transform: scale(0.8); transform-origin: left center;">{{ l["test"+i|string+ "_label"] }}</a>
+            {% endif %}
+        {% endfor %}
+        </div>
+    </td>
+    
+    {% if session.get('user_id') and session.get('role') == 'admin' %}
+    <td>
+        <div class="text-center" style="min-width:1">
+            <a href="{{ url_for('delete_dethi', idd=l.id) }}" class="text-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa link {{ l.title }} ?')"> <i class="fas fa-trash"></i></a>
+            <a href="{{ url_for('edit_dethi', idd=l.id) }}" target="_blank" class="text-warning"> <i class="fas fa-edit"></i></a>
+            <a href="{{ url_for('go_dethi', idd=l.id) }}" target="_blank" class="text-info"> <i class="fas fa-eye"></i></a>
+        </div>
+    </td>
+    {% endif %}
+</tr>
+{% endfor %}
+
+</table>
+{% if pagination.pages > 1 %}
+    {% include '_pagination_dethi.html' %}
+{% endif %}

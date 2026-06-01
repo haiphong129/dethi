@@ -1,0 +1,49 @@
+{% if request.path == '/dethi' %}
+<div class="sidebar mb-3">
+    <h4 class="mb-4">Tìm kiếm </h4>
+    <form action="{{ url_for('dethi') }}" method="get" class="row g-3">
+        <div class="col-12">
+            <label for="loai_de" class="form-label text-success fw-bold">Đề thi</label>
+            <select id="loai_de" name="loai_de" class="form-select">
+                <option value="">Tất cả </option>
+                {% for k,v in dethi_tk.items() %}
+                {%if k== request.args.get('loai_de') %}
+                    <option value="{{ k }}" selected>{{ k }} ({{ v }})</option>
+                {% else %}
+                <option value="{{ k }}">{{ k }} ({{ v }})</option>
+                {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-12">
+            <label for="tinh_thanh" class="form-label text-success fw-bold">Tỉnh/Thành</label>
+            <select id="tinh_thanh" name="tinh_thanh" class="form-select" >
+                <option value="">Tất cả </option>
+                {% for k,v in tinhthanh_tk.items() %}
+                    {%if k== request.args.get('tinh_thanh') %}
+                        <option value="{{ k }}" selected>{{ k }} ({{ v }})</option>
+                    {% else %}
+                        <option value="{{ k }}">{{ k }} ({{ v }})</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-12">
+            <label for="nam_hoc" class="form-label text-success fw-bold">Năm học</label>
+            <select id="nam_hoc" name="nam_hoc" class="form-select" >
+                <option value="">Tất cả </option>
+                {% for k,v in namhoc_tk.items() %}
+                {%if k== request.args.get('nam_hoc') %}
+                    <option value="{{ k }}" selected>{{ k }} ({{ v }})</option>
+                {% else %}
+                <option value="{{ k }}">{{ k }} ({{ v }})</option>
+                {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-12 d-grid">
+            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+        </div>
+    </form>
+</div>
+{% endif %}

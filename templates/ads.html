@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Đang chuyển hướng đến</h3> 
+<h3 class="text-primary">{{ title|safe }}</h3>
+
+<p>Đếm ngược <span id="t" class="text-danger fw-bold">{{ delay }}</span> giây...</p>
+
+<script>
+let t = {{ delay }};
+
+let countdown = setInterval(() => {
+    t--;
+    document.getElementById("t").innerText = t;
+
+    if (t <= 0) {
+        clearInterval(countdown);
+        window.location.href = "{{ url_for('go', code=code) }}";
+    }
+}, 1000);
+</script>
+{% endblock %}

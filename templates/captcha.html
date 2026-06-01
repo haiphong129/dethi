@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+<h2>{{ title|safe }}</h2>
+<form method="POST">
+    <div class="cf-turnstile"
+         data-sitekey="{{ site_key }}"
+         data-callback="onSuccess"></div>
+
+    <br>
+    <button id="btn" disabled class="btn btn-primary">Tiếp tục</button>
+</form>
+
+<script>
+function onSuccess() {
+    document.getElementById("btn").disabled = false;
+}
+</script>
+
+{% endblock %}

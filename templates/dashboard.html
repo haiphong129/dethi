@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<a href="/create" class="btn btn-success">Tạo link</a>
+<h3>Danh sách link</h3>
+
+
+
+<table class="table mt-3">
+<tr><th>Link</th><th>Clicks</th></tr>
+{% for l in links %}
+<tr>
+<td>{{ request.host_url }}{{ l.short_code }}</td>
+<td>{{ l.clicks }}</td>
+</tr>
+{% endfor %}
+</table>
+
+<canvas id="chart"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+fetch("/api/earnings")
+.then(r=>r.json())
+.then(d=>{
+new Chart(document.getElementById("chart"),{
+type:"line",
+data:{labels:d.labels,datasets:[{data:d.values}]}
+})
+})
+</script>
+
+{% endblock %}

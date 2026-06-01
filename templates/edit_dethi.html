@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block content %}
+{% if session.get('user_id') %}
+    {% if success %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ success }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endif %}
+    <div class="container py-2">
+        <div class="card shadow-sm mx-auto" style="max-width: 600px;">
+            <div class="card-body">
+                <h4 class="card-title mb-4">Sửa Đề thi</h4>
+                <form method="post" action="{{ url_for('edit_dethi', idd=dethi.id) }}">
+                    <input type="hidden" name="id" value="{{dethi.id}}">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold" for="url">Đường dẫn:</label>
+                        <input id="url" name="url" type="url" class="form-control" placeholder="https://..." value="{{dethi.original_url}}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold" for="title">Tiêu đề:</label>
+                        <input id="title" name="title" class="form-control" placeholder="Tiêu đề" value="{{dethi.title}}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold" for="debai">Đề bài:</label>
+                        <input id="debai" name="debai" class="form-control" placeholder="Đề bài" value="{{dethi.debai}}">
+                        <input id="debai_id" name="debai_id" type="hidden" value="{{dethi.debai_id}}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold" for="huongdan">Hướng dẫn:</label>
+                        <input id="huongdan" name="huongdan" class="form-control" placeholder="Hướng dẫn" value="{{dethi.huongdan}}">
+                        <input id="huongdan_id" name="huongdan_id" type="hidden" value="{{dethi.huongdan_id}}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold" for="test">Tests</label>
+                        <input id="test1" name="test1_label" class="form-control p-1 m-1" placeholder="Test bài 1" value="{{dethi.test1_label}}">
+                        <input id="test1" name="test1" class="form-control p-1 m-1 md-2" placeholder="Link test bài 1" value="{{dethi.test1}}">
+                        <input id="test1_id" name="test1_id" type="hidden" value="{{dethi.test1_id}}">
+
+                        <input id="test2" name="test2_label" class="form-control p-1 m-1" placeholder="Test bài 2" value="{{dethi.test2_label}}">
+                        <input id="test2" name="test2" class="form-control p-1 m-1 md-2" placeholder="Link test bài 2" value="{{dethi.test2}}">
+                        <input id="test2_id" name="test2_id" type="hidden" value="{{dethi.test2_id}}">
+
+                        <input id="test3" name="test3_label" class="form-control p-1 m-1" placeholder="Test bài 3" value="{{dethi.test3_label}}">
+                        <input id="test3" name="test3" class="form-control p-1 m-1 md-2" placeholder="Link test bài 3" value="{{dethi.test3}}">
+                        <input id="test3_id" name="test3_id" type="hidden" value="{{dethi.test3_id}}">
+
+                        <input id="test4" name="test4_label" class="form-control p-1 m-1" placeholder="Test bài 4" value="{{dethi.test4_label}}">
+                        <input id="test4" name="test4" class="form-control p-1 m-1 md-2" placeholder="Link test bài 4" value="{{dethi.test4}}">
+                        <input id="test4_id" name="test4_id" type="hidden" value="{{dethi.test4_id}}">
+
+                        <input id="test5" name="test5_label" class="form-control p-1 m-1" placeholder="Test bài 5" value="{{dethi.test5_label}}">
+                        <input id="test5" name="test5" class="form-control p-1 m-1 md-2" placeholder="Link test bài 5" value="{{dethi.test5}}">
+                        <input id="test5_id" name="test5_id" type="hidden" value="{{dethi.test5_id}}">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                document.querySelector('form').submit();
+            }
+        });
+    </script>
+{% endif %}
+{% endblock %}

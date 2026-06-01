@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container py-2">
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-7">
+
+            <div class="card border-0 shadow-lg rounded-4">
+
+                <div class="card-body p-2">
+
+                    <div class="text-center mb-2">
+
+                        <h2 class="fw-bold mb-2">
+                            Đăng nhập
+                        </h2>
+
+                        <!-- <p class="text-muted mb-0">
+                            Đăng nhập để quản lý liên kết
+                        </p> -->
+
+                    </div>
+
+                    {% if error %} <div class="alert alert-danger"> {{ error }}
+
+                    </div>
+
+                    {% endif %}
+
+                    <form method="POST">
+
+                        <div class="mb-2">
+
+                            <label class="form-label fw-semibold">
+                                Tên đăng nhập
+                            </label>
+
+                            <input
+                                type="text"
+                                name="username"
+                                class="form-control form-control-sm"
+                                placeholder="Nhập tên đăng nhập"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="mb-2">
+
+                            <label class="form-label fw-semibold">
+                                Mật khẩu
+                            </label>
+
+                            <input
+                                type="password"
+                                name="password"
+                                class="form-control form-control-sm"
+                                placeholder="Nhập mật khẩu"
+                                required
+                            >
+
+                        </div>
+
+                        <!-- CLOUDFLARE TURNSTILE -->
+
+                        <div class="mb-2 d-flex justify-content-center">
+
+                            <div
+                                class="cf-turnstile"
+                                data-sitekey="{{ TURNSTILE_SITE_KEY }}"
+                            ></div>
+
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary btn-lg w-100"
+                        >
+
+                            Đăng nhập
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script
+src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+defer>
+</script>
+
+{% endblock %}

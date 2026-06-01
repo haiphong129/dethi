@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}    
+    <h3>Danh sách <span class="text-success fw-bold">{{ links|length }}</span> link rút gọn</h3>
+    {% if pagination.pages > 1 %}
+        {% include '_pagination_links.html' %}
+    {% endif %}
+    <table class="table table-bordered">
+    <tr>
+        <th class="text-center fw-bold">Tiêu đề</th>
+        <th class="text-center fw-bold">Link rút gọn</th>
+        <th class="text-center fw-bold">clicks</th>
+        {% if session.get('user_id') and session.get('role') == 'admin' %}
+            <th class="text-center fw-bold">Hành động</th>
+        {% endif %}
+    </tr>
+
+    {% for l in links %}
+    <tr>
+        <td>
+            {{ loop.index + (pagination.page - 1) * pagination.per_page }}.  
+            {%if l.original_url %}
+                <a href="{{l.original_url }}" target="_blank" class="text-decoration-none text-primary">{{ l.title|safe }}</a>
+            {%else%}
+                <span class="">{{ l.title|safe }}</span>
+            {% endif %}
+        </td>
+        <td><a href="{{ request.host_url }}{{ l.short_code }}" target="_blank">{{ request.host_url }}{{ l.short_code }}</a></td>
+        <td class="text-center">{{ l.clicks }}</td>
+        {% if session.get('user_id') and session.get('role') == 'admin' %}
+        <td>
+            <div class="d-flex gap-1">
+                <a href="{{ url_for('delete_link', code=l.short_code) }}" class="btn btn-danger btn-sm flex-grow-0" onclick="return confirm('Bạn có chắc chắn muốn xóa link {{ l.short_code }} ?')">Xóa</a>
+                <a href="{{ url_for('edit_link', code=l.short_code) }}" class="btn btn-warning btn-sm flex-grow-0" target="_blank">Sửa</a>
+            </div>
+        </td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+
+    </table>
+    {% if pagination.pages > 1 %}
+        {% include '_pagination_links.html' %}
+    {% endif %}
+    {% endblock %}

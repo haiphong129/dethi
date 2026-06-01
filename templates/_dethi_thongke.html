@@ -1,0 +1,36 @@
+{% if request.path in ['/dethi', '/createdethi'] 
+or request.path.startswith('/pushoj/') %}
+<div class="sidebar">
+    <div class="mb-4 pb-3 border-bottom">
+        <h5 class="mb-3 text-success"><i class="fas fa-layer-group me-2"></i>Loại đề</h5>
+        <p class="text-muted mb-2" style="margin-left: 20px;">
+            {% for k,v in dethi_tk.items() %}
+                <a href="{{ url_for('dethi', loai_de=k) }}" class="text-decoration-none">
+                    <strong>{{loop.index}}. {{ k }}</strong>: {{ v }}
+                </a><br>
+            {% endfor %}
+        </p>
+    </div>
+    
+    <div class="mb-4 pb-3 border-bottom">
+        <h5 class="mb-3 text-success"><i class="fas fa-calendar-alt me-2"></i>Năm Học</h5>
+        <p class="text-muted mb-2" style="margin-left: 20px;">
+            {% for k,v in namhoc_tk.items() %}
+                <a href="{{ url_for('dethi', nam_hoc=k) }}" class="text-decoration-none">
+                    <strong>{{loop.index}}. {{ k }}</strong>: {{ v }}
+                </a><br>
+            {% endfor %}
+        </p>
+    </div>
+    <div class="mb-4 pb-3 border-bottom">
+        <h5 class="mb-3 text-success"><i class="fas fa-map-marker-alt me-2"></i>Tỉnh Thành</h5>
+        <p class="text-muted mb-2" style="margin-left: 20px;">
+            {% for k,v in tinhthanh_tk.items() %}
+                <a href="{{ url_for('dethi', tinh_thanh=k) }}" class="text-decoration-none">
+                    <strong>{{loop.index}}. {{ k }}</strong>: {{ v }}
+                </a><br>
+            {% endfor %}
+        </p>
+    </div>
+</div>
+{% endif %}

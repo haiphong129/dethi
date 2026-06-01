@@ -1,0 +1,9 @@
+flask
+flask_sqlalchemy
+flask_migrate
+python-dotenv
+werkzeug
+flask-limiter
+requests
+user-agents
+psycopg2-binary

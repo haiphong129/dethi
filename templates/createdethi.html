@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block content %}
+{% if success %}
+{% if "thành công" in success %}
+    <div class="alert alert-success  alert-dismissible fade show fw-bold" role="alert">
+        {{ success }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% else %}
+    <div class="alert alert-danger  alert-dismissible fade show fw-bold" role="alert">
+        {{ success }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endif %}
+{% endif %}
+<div class="container py-2">
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card shadow-sm mx-auto" style="max-width: 240px;">
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Tên Đề thi</h5>
+                    <pre id="dethi-content" class="p-1 bg-light rounded" style="white-space: pre-wrap; word-wrap: break-word; min-height: 120px;">Đang tải...</pre>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="card shadow-sm mx-auto" style="max-width: 600px;">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">Tạo Đề thi</h4>
+                    <form method="post">
+                        <div class="mb-3">
+                            <label class="form-label" for="title">Tiêu đề</label>
+                            <input id="title" name="title" class="form-control" placeholder="Tiêu đề" value="{{ request.form.title or '' }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="url">Đường dẫn</label>
+                            <input id="url" name="url" type="url" class="form-control" placeholder="https://..." value="{{ request.form.url or '' }}" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Tạo</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('/static/data/dethi.txt')
+        .then(function(response) {
+            if (!response.ok) {
+                throw new Error('Không thể tải nội dung.');
+            }
+            return response.text();
+        })
+        .then(function(text) {
+            document.getElementById('dethi-content').textContent = text;
+        })
+        .catch(function(error) {
+            document.getElementById('dethi-content').textContent = error.message;
+        });
+
+    // Auto-submit on Ctrl+S
+    document.addEventListener('keydown', function(event) {
+        if (event.ctrlKey && event.key === 's') {
+            event.preventDefault();
+            document.querySelector('form').submit();
+        }
+    });
+});
+</script>
+
+{% endblock %}

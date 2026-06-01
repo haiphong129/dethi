@@ -1,0 +1,881 @@
+--
+-- PostgreSQL database dump
+--
+
+\restrict ZEspHlz7eYEpVMFI7z0HFuPfYXdoKegZc48aHa47LtJRiPuUw0wn2GY2UzgTgdQ
+
+-- Dumped from database version 18.3
+-- Dumped by pg_dump version 18.3
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: public; Type: SCHEMA; Schema: -; Owner: postgres
+--
+
+-- *not* creating schema, since initdb creates it
+
+
+ALTER SCHEMA public OWNER TO postgres;
+
+--
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: postgres
+--
+
+COMMENT ON SCHEMA public IS '';
+
+
+--
+-- Name: pg_trgm; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_trgm; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching based on trigrams';
+
+
+--
+-- Name: unaccent; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS unaccent WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION unaccent; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION unaccent IS 'text search dictionary that removes accents';
+
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: alembic_version; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.alembic_version (
+    version_num character varying(32) NOT NULL
+);
+
+
+ALTER TABLE public.alembic_version OWNER TO postgres;
+
+--
+-- Name: click_log; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.click_log (
+    id integer NOT NULL,
+    link_id integer,
+    user_id integer,
+    country character varying(100),
+    device character varying(50),
+    revenue double precision,
+    created_at timestamp without time zone
+);
+
+
+ALTER TABLE public.click_log OWNER TO postgres;
+
+--
+-- Name: click_log_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.click_log_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.click_log_id_seq OWNER TO postgres;
+
+--
+-- Name: click_log_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.click_log_id_seq OWNED BY public.click_log.id;
+
+
+--
+-- Name: dethi; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.dethi (
+    id integer NOT NULL,
+    title character varying(500) NOT NULL,
+    description text,
+    created_at timestamp without time zone
+);
+
+
+ALTER TABLE public.dethi OWNER TO postgres;
+
+--
+-- Name: dethi_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.dethi_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.dethi_id_seq OWNER TO postgres;
+
+--
+-- Name: dethi_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.dethi_id_seq OWNED BY public.dethi.id;
+
+
+--
+-- Name: link; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.link (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    original_url character varying(500) NOT NULL,
+    short_code character varying(10),
+    clicks integer,
+    title character varying(200),
+    created_at timestamp without time zone,
+    loai character varying(20),
+    dethi_id integer
+);
+
+
+ALTER TABLE public.link OWNER TO postgres;
+
+--
+-- Name: link_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.link_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.link_id_seq OWNER TO postgres;
+
+--
+-- Name: link_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.link_id_seq OWNED BY public.link.id;
+
+
+--
+-- Name: user; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."user" (
+    id integer NOT NULL,
+    username character varying(50) NOT NULL,
+    password character varying(200) NOT NULL,
+    role character varying(20)
+);
+
+
+ALTER TABLE public."user" OWNER TO postgres;
+
+--
+-- Name: user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.user_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.user_id_seq OWNER TO postgres;
+
+--
+-- Name: user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.user_id_seq OWNED BY public."user".id;
+
+
+--
+-- Name: click_log id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.click_log ALTER COLUMN id SET DEFAULT nextval('public.click_log_id_seq'::regclass);
+
+
+--
+-- Name: dethi id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.dethi ALTER COLUMN id SET DEFAULT nextval('public.dethi_id_seq'::regclass);
+
+
+--
+-- Name: link id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.link ALTER COLUMN id SET DEFAULT nextval('public.link_id_seq'::regclass);
+
+
+--
+-- Name: user id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."user" ALTER COLUMN id SET DEFAULT nextval('public.user_id_seq'::regclass);
+
+
+--
+-- Data for Name: alembic_version; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.alembic_version (version_num) FROM stdin;
+6f499b074f3e
+\.
+
+
+--
+-- Data for Name: click_log; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.click_log (id, link_id, user_id, country, device, revenue, created_at) FROM stdin;
+1	1	1	Vietnam	Desktop	0.002	2026-04-30 11:04:30.996506
+2	1	1	Vietnam	Desktop	0.002	2026-04-30 11:06:17.292688
+3	1	1	Vietnam	Desktop	0.002	2026-04-30 16:28:48.149233
+4	1	1	Vietnam	Desktop	0.002	2026-04-30 16:29:25.439324
+5	1	1	Vietnam	Desktop	0.002	2026-04-30 16:29:54.989897
+6	1	1	Vietnam	Desktop	0.002	2026-04-30 16:32:05.013728
+7	1	1	Vietnam	Desktop	0.002	2026-04-30 16:34:55.178021
+8	1	1	Vietnam	Desktop	0.002	2026-04-30 16:37:52.186259
+9	1	1	Vietnam	Desktop	0.002	2026-04-30 16:43:01.142538
+10	1	1	Vietnam	Desktop	0.002	2026-04-30 16:47:06.17581
+11	1	1	Vietnam	Desktop	0.002	2026-04-30 16:50:49.828756
+12	1	1	Vietnam	Desktop	0.002	2026-04-30 16:53:44.481592
+13	1	1	Vietnam	Desktop	0.002	2026-04-30 16:54:57.974569
+14	2	1	Vietnam	Desktop	0.002	2026-05-01 15:57:42.247131
+15	2	1	Vietnam	Desktop	0.002	2026-05-01 16:20:38.049509
+16	2	1	Vietnam	Desktop	0.002	2026-05-01 16:21:09.470498
+17	3	1	Vietnam	Desktop	0.002	2026-05-01 17:58:47.206389
+18	8	1	Vietnam	Desktop	0.002	2026-05-02 16:28:49.659328
+19	2	1	Vietnam	Desktop	0.002	2026-05-02 16:39:00.65641
+20	10	1	Vietnam	Desktop	0.002	2026-05-04 09:57:19.612348
+21	3	1	Vietnam	Desktop	0.002	2026-05-04 10:00:16.40899
+22	32	1	Vietnam	Desktop	0.002	2026-05-06 16:14:47.663074
+23	31	1	Vietnam	Desktop	0.002	2026-05-06 16:20:43.619603
+24	13	1	Vietnam	Desktop	0.002	2026-05-06 16:23:04.426443
+25	29	1	Vietnam	Desktop	0.002	2026-05-07 10:20:14.204308
+26	27	1	Vietnam	Desktop	0.002	2026-05-07 10:21:18.257691
+27	34	1	Vietnam	Desktop	0.002	2026-05-07 10:28:58.693003
+28	14	1	Vietnam	Desktop	0.002	2026-05-07 10:37:00.575505
+29	33	1	Vietnam	Desktop	0.002	2026-05-07 11:24:04.093881
+30	34	1	Vietnam	Desktop	0.002	2026-05-07 11:24:59.486159
+31	5	1	Vietnam	Desktop	0.002	2026-05-07 11:26:22.732138
+32	11	1	Vietnam	Desktop	0.002	2026-05-07 11:27:39.635653
+33	52	1	Vietnam	Desktop	0.002	2026-05-08 20:08:23.747354
+34	51	1	Vietnam	Desktop	0.002	2026-05-08 22:53:15.629868
+35	55	1	Vietnam	Desktop	0.002	2026-05-10 09:05:32.749462
+36	60	1	Vietnam	Desktop	0.002	2026-05-11 08:54:37.858297
+37	60	1	Vietnam	Desktop	0.002	2026-05-11 08:55:06.84909
+38	77	1	Vietnam	Desktop	0.002	2026-05-11 10:12:40.937238
+39	75	1	Vietnam	Desktop	0.002	2026-05-11 10:13:47.678417
+40	60	1	Vietnam	Desktop	0.002	2026-05-11 10:14:18.267498
+41	95	1	Vietnam	Desktop	0.002	2026-05-15 09:10:12.100103
+42	94	1	Vietnam	Desktop	0.002	2026-05-15 09:10:14.420686
+43	92	1	Vietnam	Desktop	0.002	2026-05-15 09:11:06.42902
+44	93	1	Vietnam	Desktop	0.002	2026-05-15 09:11:18.64967
+45	91	1	Vietnam	Desktop	0.002	2026-05-15 09:13:16.641265
+46	90	1	Vietnam	Desktop	0.002	2026-05-15 09:14:10.169403
+47	45	1	Vietnam	Desktop	0.002	2026-05-15 09:15:53.357794
+48	104	1	Vietnam	Desktop	0.002	2026-05-15 14:52:54.196715
+49	103	1	Vietnam	Desktop	0.002	2026-05-15 14:53:56.294555
+50	103	1	Vietnam	Desktop	0.002	2026-05-15 14:54:48.600453
+51	108	1	Vietnam	Desktop	0.002	2026-05-23 11:12:06.470683
+52	107	1	Vietnam	Desktop	0.002	2026-05-25 15:58:21.671449
+53	109	1	Vietnam	Desktop	0.002	2026-05-25 17:14:43.743714
+54	110	1	Vietnam	Desktop	0.002	2026-05-27 18:38:57.711304
+55	119	1	Vietnam	Desktop	0.002	2026-05-27 22:35:11.67869
+56	110	1	Vietnam	Desktop	0.002	2026-05-27 22:35:34.038071
+57	118	1	Vietnam	Desktop	0.002	2026-05-28 08:55:47.245806
+58	120	1	Vietnam	Desktop	0.002	2026-05-28 09:02:35.164884
+59	128	1	Vietnam	Desktop	0.002	2026-05-28 09:23:29.882999
+60	75	1	Vietnam	Desktop	0.002	2026-05-28 15:08:34.487346
+61	142	1	Vietnam	Desktop	0.002	2026-05-28 16:51:07.712258
+62	212	1	Vietnam	Desktop	0.002	2026-05-30 14:29:46.860572
+63	203	1	Vietnam	Desktop	0.002	2026-05-30 14:32:49.836407
+64	201	1	Vietnam	Desktop	0.002	2026-05-30 14:33:47.568451
+65	204	1	Vietnam	Desktop	0.002	2026-05-30 14:36:21.850885
+66	207	1	Vietnam	Desktop	0.002	2026-05-30 14:37:06.848136
+67	211	1	Vietnam	Desktop	0.002	2026-05-30 14:38:23.698866
+68	213	1	Vietnam	Desktop	0.002	2026-05-30 14:38:51.226596
+69	220	1	Vietnam	Desktop	0.002	2026-05-30 15:40:46.424283
+70	220	1	Vietnam	Desktop	0.002	2026-05-30 15:41:11.102219
+71	220	1	Vietnam	Desktop	0.002	2026-05-30 15:51:06.06037
+72	177	1	Vietnam	Desktop	0.002	2026-05-30 15:51:35.222113
+73	208	1	Vietnam	Desktop	0.002	2026-05-30 15:54:12.908637
+74	206	1	Vietnam	Desktop	0.002	2026-05-30 15:55:12.847709
+75	206	1	Vietnam	Desktop	0.002	2026-05-30 15:56:34.850501
+76	214	1	Vietnam	Desktop	0.002	2026-05-30 15:57:56.676052
+77	220	1	Vietnam	Desktop	0.002	2026-05-30 15:58:41.043959
+78	210	1	Vietnam	Desktop	0.002	2026-05-30 16:00:50.660589
+79	201	1	Vietnam	Desktop	0.002	2026-05-30 16:13:30.454544
+80	220	1	Vietnam	Desktop	0.002	2026-05-30 16:16:59.390617
+81	191	1	Vietnam	Desktop	0.002	2026-05-30 16:18:17.589066
+82	191	1	Vietnam	Desktop	0.002	2026-05-30 16:19:31.530662
+83	244	1	Vietnam	Desktop	0.002	2026-05-30 16:23:37.735938
+84	244	1	Vietnam	Desktop	0.002	2026-05-30 16:24:01.038719
+85	244	1	Vietnam	Desktop	0.002	2026-05-30 16:25:22.485192
+86	246	1	Vietnam	Desktop	0.002	2026-05-30 16:26:27.787084
+87	213	1	Vietnam	Desktop	0.002	2026-05-30 16:40:47.691145
+88	206	1	Vietnam	Desktop	0.002	2026-05-30 16:43:34.236029
+\.
+
+
+--
+-- Data for Name: dethi; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.dethi (id, title, description, created_at) FROM stdin;
+322	Đề thi HSG Chọn đội tuyển QG TP Hải Phòng năm học 2018-2019 - Ngày 2	\N	2026-05-02 16:20:47.178381
+323	Đề thi HSG Chọn đội tuyển QG TP Hải Phòng năm học 2019-2020 - Ngày 1	\N	2026-05-02 16:26:46.858893
+324	Đề thi HSG Chọn đội tuyển QG TP Hải Phòng năm học 2019-2020 - Ngày 2	\N	2026-05-02 16:28:03.854779
+325	Đề thi HSG THPT TP Hải Phòng năm học 2016-2017 - Bảng Chuyên	\N	2026-05-01 15:56:12.334547
+326	Đề thi HSG THPT TP Hải Phòng năm học 2015-2016 - bảng A1	\N	2026-05-01 16:23:48.273896
+327	Đề thi HSG THPT TP Hải Phòng năm học 2017-2018 - bảng Chuyên	\N	2026-05-01 16:26:56.366528
+328	Đề thi HSG THPT TP Hải Phòng năm học 2021-2022	\N	2026-05-02 16:03:27.722087
+329	Đề thi HSG Chọn đội tuyển QG TP Hải Phòng năm học 2018-2019 - Ngày 1	\N	2026-05-02 16:15:33.653293
+330	Đề thi HSG Chọn đội tuyển QG TP Hải Phòng năm học 2021-2022	\N	2026-05-02 17:01:44.419147
+331	Đề thi HSG Chọn đội tuyển QG TP Hải Phòng năm học 2022-2023	\N	2026-05-04 08:59:13.686139
+332	Đề thi HSG Chọn đội tuyển QG TP Hải Phòng năm học 2023-2024	\N	2026-05-04 09:08:34.197614
+333	Đề thi HSG THCS TP Hải Phòng năm học 2023-2024	\N	2026-05-04 09:09:38.395263
+334	Đề thi HSG Chọn đội tuyển QG TP Hải Phòng năm học 2024-2025 - Ngày 1	\N	2026-05-04 09:55:50.175501
+335	Đề thi HSG THPT TP Hải Phòng năm học 2016-2017 - Bảng không chuyên	\N	2026-05-06 14:44:59.649928
+336	Đề thi HSG THPT TP Hải Phòng năm học 2017-2018 - Bảng không chuyên	\N	2026-05-06 15:21:54.570949
+337	Đề thi HSG THPT TP Hải Phòng năm học 2018-2019 - Bảng B	\N	2026-05-06 15:24:38.964457
+338	Đề thi HSG THPT TP Hải Phòng năm học 2019-2020 - Bảng không chuyên	\N	2026-05-06 15:28:51.043419
+339	Đề thi HSG THPT TP Hải Phòng năm học 2020-2021 - Bảng B	\N	2026-05-06 15:31:23.03388
+340	Đề thi HSG THPT TP Hải Phòng năm học 2021-2022 - Bảng B	\N	2026-05-06 15:33:31.098504
+341	Đề thi HSG THPT TP Hải Phòng năm học 2022-2023	\N	2026-05-06 15:35:42.466932
+342	Đề thi HSG THPT TP Hải Phòng năm học 2023-2024	\N	2026-05-06 15:37:58.638573
+343	Đề thi HSG THPT TP Hải Phòng năm học 2024-2025	\N	2026-05-06 15:40:00.54742
+344	Đề thi HSG Chọn đội tuyển QG tỉnh Quảng Ninh năm học 2023-2024 - Ngày 1	\N	2026-05-06 15:46:56.246123
+345	Đề thi HSG THPT tỉnh Bắc Giang năm học 2021-2022	\N	2026-05-06 15:56:00.354832
+346	Đề thi HSG THPT tỉnh Bắc Giang năm học 2022-2023 - Lớp 11	\N	2026-05-06 15:57:55.611966
+347	Đề thi HSG THCS tỉnh Bà Rịa - Vũng Tàu năm học 2023-2024	\N	2026-05-06 16:01:03.315268
+348	Đề thi HSG THPT tỉnh Bình Phước năm học 2018-2019	\N	2026-05-06 16:05:39.573971
+349	Đề thi HSG THPT tỉnh Bình Phước năm học 2021-2022	\N	2026-05-06 16:07:32.709003
+350	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Bình Thuận năm học 2021-2022	\N	2026-05-06 16:11:30.979801
+351	Đề thi HSG THPT tỉnh Bình Thuận năm học 2021-2022	\N	2026-05-06 16:13:04.687177
+352	Đề thi HSG THCS tỉnh Đắk Nông năm học 2018-2019	\N	2026-05-07 10:24:22.780489
+353	Đề thi HSG THCS tỉnh Đắk Nông năm học 2022-2023	\N	2026-05-07 10:27:25.445733
+354	Đề thi HSG THCS tỉnh Đồng Tháp năm học 2022-2023	\N	2026-05-07 10:54:06.353804
+355	Đề thi HSG THPT tỉnh Gia Lai năm học 2020-2021	\N	2026-05-07 10:56:04.158118
+356	Đề thi HSG THPT tỉnh Hải Dương năm học 2017-2018	\N	2026-05-07 10:57:14.445517
+357	Đề thi HSG THPT tỉnh Hải Dương năm học 2023-2024	\N	2026-05-07 10:59:02.61432
+358	Đề thi HSG THPT tỉnh Hà Nam năm học 2019-2020	\N	2026-05-07 11:03:31.549183
+359	Đề thi HSG THPT tỉnh Hà Nam năm học 2020-2021	\N	2026-05-07 11:06:47.555024
+360	Đề thi HSG THCS tỉnh Đắk Nông năm học 2020-2021	\N	2026-05-07 11:25:41.190678
+361	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Hà Nam năm học 2022-2023	\N	2026-05-07 11:32:30.591951
+362	Đề thi HSG THCS TP Hà Nội năm học 2013-2014	\N	2026-05-07 14:36:16.864911
+363	Đề thi HSG THCS TP Hà Nội năm học 2014-2015	\N	2026-05-07 14:37:50.185551
+364	Đề thi HSG THCS TP Hà Nội năm học 2016-2017	\N	2026-05-07 14:39:15.336409
+365	Đề thi HSG THCS TP Hà Nội năm học 2017-2018	\N	2026-05-07 14:41:15.576895
+366	Đề thi HSG THCS TP Hà Nội năm học 2020-2021	\N	2026-05-07 14:43:08.352055
+367	Đề thi HSG THCS TP Hà Nội năm học 2023-2024	\N	2026-05-07 14:45:00.39837
+368	Đề thi HSG THPT tỉnh Hà Tĩnh năm học 2023-2024 - Lớp 10	\N	2026-05-07 14:47:19.759642
+369	Đề thi HSG THPT tỉnh Hà Tĩnh năm học 2023-2024 - Lớp 12	\N	2026-05-07 14:49:17.541631
+370	Đề thi HSG THCS tỉnh Hòa Bình năm học 2017-2018	\N	2026-05-07 14:51:51.577318
+371	Đề thi HSG THCS tỉnh Hòa Bình năm học 2020-2021	\N	2026-05-07 14:53:32.849965
+372	Đề thi HSG THCS tỉnh Hòa Bình năm học 2021-2022	\N	2026-05-07 14:54:52.655247
+373	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Hòa Bình năm học 2023-2024	\N	2026-05-07 14:57:07.86676
+374	Đề thi HSG THCS tỉnh Hưng Yên năm học 2023-2024	\N	2026-05-11 08:43:34.800062
+375	Đề thi HSG THPT tỉnh Khánh Hòa năm học 2016-2017	\N	2026-05-11 08:45:59.455141
+376	Đề thi HSG Chọn đội tuyển tỉnh Khánh Hòa năm học 2017-2018	\N	2026-05-11 08:48:35.510575
+377	Đề thi HSG THCS tỉnh Khánh Hòa năm học 2018-2019 - Vạn Ninh	\N	2026-05-11 08:51:29.571489
+378	Đề thi HSG THPT tỉnh Khánh Hòa năm học 2019-2020	\N	2026-05-11 08:54:04.871084
+379	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Khánh Hòa năm học 2020-2021 - Ngày 1	\N	2026-05-11 08:57:05.162043
+380	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Khánh Hòa năm học 2020-2021 - Ngày 2	\N	2026-05-11 08:58:56.448636
+381	Đề thi HSG THCS tỉnh Khánh Hòa năm học 2020-2021 - Vạn Ninh	\N	2026-05-11 09:01:43.866371
+382	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Khánh Hòa năm học 2021-2022 - Ngày 1	\N	2026-05-11 09:04:13.391237
+383	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Khánh Hòa năm học 2021-2022 - Ngày 2	\N	2026-05-11 09:05:53.226904
+384	Đề thi HSG THCS tỉnh Khánh Hòa năm học 2023-2024	\N	2026-05-11 09:08:24.758433
+385	Đề thi HSG THCS tỉnh Khánh Hòa năm học 2023-2024 - Vạn Ninh	\N	2026-05-11 09:12:09.529358
+386	Đề thi HSG THPT tỉnh Khánh Hòa năm học 2025-2026	\N	2026-05-11 09:13:55.388347
+387	Đề thi HSG THCS tỉnh Lâm Đồng năm học 2022-2023	\N	2026-05-11 09:19:04.930542
+388	Đề thi HSG THCS tỉnh Lào Cai năm học 2019-2020	\N	2026-05-11 09:23:53.941154
+389	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Lào Cai năm học 2022-2023	\N	2026-05-11 09:25:47.54079
+390	Đề thi Tuyển sinh 10 tỉnh Lào Cai năm học 2022-2023	\N	2026-05-11 09:28:26.830736
+391	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Long An năm học 2020-2021 - Ngày 1	\N	2026-05-11 09:32:50.883133
+392	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Long An năm học 2020-2021 - Ngày 2	\N	2026-05-11 09:34:08.212651
+393	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Long An năm học 2021-2022 - Ngày 1	\N	2026-05-11 09:35:22.14186
+394	Đề thi HSG THPT tỉnh Nam Định năm học 2021-2022	\N	2026-05-11 09:41:29.803213
+395	Đề thi HSG THCS tỉnh Nam Định năm học 2023-2024	\N	2026-05-11 09:43:31.571264
+396	Đề thi HSG THPT tỉnh Nghệ An năm học 2017-2018 - Lớp 11	\N	2026-05-15 07:25:44.325209
+397	Đề thi HSG THPT tỉnh Nghệ An năm học 2018-2019 - Bảng A	\N	2026-05-15 07:27:13.197052
+398	Đề thi HSG THPT tỉnh Nghệ An năm học 2018-2019 - Lớp 11	\N	2026-05-15 07:28:55.68023
+399	Đề thi HSG THPT tỉnh Nghệ An năm học 2020-2021 - Bảng A	\N	2026-05-15 07:30:07.621602
+400	Đề thi HSG THCS tỉnh Ninh Bình năm học 2017-2018	\N	2026-05-15 07:31:35.806411
+401	Đề thi HSG THCS tỉnh Ninh Bình năm học 2018-2019	\N	2026-05-15 07:32:48.420643
+402	Đề thi HSG THPT tỉnh Ninh Bình năm học 2020-2021	\N	2026-05-15 07:34:04.499732
+403	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Ninh Bình năm học 2022-2023 - Ngày 1	\N	2026-05-15 07:35:35.453255
+404	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Ninh Bình năm học 2022-2023 - Ngày 2	\N	2026-05-15 07:37:03.442257
+405	Đề thi HSG THCS tỉnh Ninh Bình năm học 2023-2024	\N	2026-05-15 07:39:30.239668
+406	Đề thi Olympic 30/4 năm 2024 - Khối 10	\N	2026-05-15 08:05:14.796633
+407	Đề thi Olympic 30/4 năm 2024 - Khối 11	\N	2026-05-15 08:06:36.724843
+408	Đề thi HSG THCS tỉnh Phú Thọ năm học 2018-2019	\N	2026-05-15 08:08:31.884695
+409	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Phú Thọ năm học 2020-2021 - Ngày 1	\N	2026-05-15 08:10:10.472169
+410	Đề thi HSG THCS tỉnh Phú Thọ năm học 2023-2024 - Cấp huyện	\N	2026-05-15 08:13:08.746585
+411	Đề thi HSG THCS tỉnh Quảng Nam năm học 2018-2019	\N	2026-05-15 08:14:31.799681
+412	Đề thi HSG THCS tỉnh Quảng Nam năm học 2022-2023	\N	2026-05-15 08:15:49.992953
+413	Đề thi HSG THPT tỉnh Quảng Nam năm học 2023-2024	\N	2026-05-15 08:19:05.6425
+414	Đề thi HSG THCS tỉnh Quảng Ninh năm học 2021-2022	\N	2026-05-15 14:02:50.808954
+415	Đề thi HSG THPT tỉnh Quảng Trị năm học 2021-2022	\N	2026-05-15 14:04:20.708221
+416	Đề thi Tuyển sinh 10 tỉnh Quảng Trị năm học 2022-2023	\N	2026-05-15 14:07:23.25256
+417	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Thái Bình năm học 2023-2024 - Ngày 1	\N	2026-05-15 14:10:41.528513
+418	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Thanh Hóa năm học 2023-2024	\N	2026-05-15 14:16:05.467616
+419	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Thanh Hóa năm học 2023-2024 - Cấp trường	\N	2026-05-15 14:20:47.047473
+421	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Bà Rịa - Vũng Tàu năm học 2022-2023	\N	2026-05-15 14:29:42.680998
+422	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Tiền Giang năm học 2022-2023 - Ngày 1	\N	2026-05-15 14:32:24.910099
+423	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Tiền Giang năm học 2022-2023 - Ngày 2	\N	2026-05-15 14:35:53.652182
+424	Đề thi Tuyển sinh 10 tỉnh Bà Rịa - Vũng Tàu năm học 2025-2026	\N	2026-05-23 10:59:44.7619
+425	Đề thi HSG THCS tỉnh Khánh Hòa năm học 2016-2017	\N	2026-05-23 11:04:55.636022
+427	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Bắc Ninh năm học 2024-2025 - Ngày 2	\N	2026-05-27 18:38:21.092675
+426	Đề thi HSG Chọn đội tuyển tỉnh Bắc Ninh năm học 2024-2025 - Ngày 1	\N	2026-05-23 11:07:43.74442
+420	Đề thi HSG Chọn đội tuyển Quốc gia TP Hải Phòng năm học 2024-2025 - Ngày 2	\N	2026-05-15 14:24:04.688369
+\.
+
+
+--
+-- Data for Name: link; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.link (id, user_id, original_url, short_code, clicks, title, created_at, loai, dethi_id) FROM stdin;
+214	1	https://drive.google.com/file/d/1XJTyJb6Qzu2l9RBOOyZBcCPx9yw4MGJd/view?usp=drive_link	IsYs6D	1	<b>[ghibh]</b> - Đề thi Tuyển sinh 10 tỉnh Quảng Trị  2022-2023	2026-05-30 14:29:01.996932	Test	416
+7	1	https://drive.google.com/drive/folders/1Sf5re7KsHD1PzKmkhmgsrymRPiUYOBvS?usp=drive_link	SD6ZpS	0	Đề thi HSG Chọn đội tuyển QG TP Hải Phòng năm học 2018-2019 - Ngày 2	2026-05-02 16:20:47.178381	all	322
+210	1	https://drive.google.com/file/d/1QHt_n3d8HFLcC1KiVLitI0EZkm0gsFXq/view?usp=drive_link	rEg3wA	1	<b>[Đề bài]</b> - Đề thi Tuyển sinh 10 tỉnh Quảng Trị  2022-2023	2026-05-30 14:29:01.98019	Đề	416
+245	1	https://drive.google.com/file/d/11xuYq-kEtn3TIuoMIA_FMdxqme5ZhyI_/view?usp=drive_link	Q5bhoJ	0	<b>[Đề bài]</b> - Chọn đội tuyển tỉnh Khánh Hòa  2017-2018	2026-05-30 16:26:01.49634	Đề	376
+247	1	https://drive.google.com/file/d/1_XE7MwRuIy1paP5bXLS1KXTHqP_lrWIJ/view?usp=drive_link	LXn6WG	0	<b>[hough]</b> - Chọn đội tuyển tỉnh Khánh Hòa  2017-2018	2026-05-30 16:26:01.5102	Test	376
+248	1	https://drive.google.com/file/d/1CxY4B6dZXI4sKGkE7EA8G211jFbrQPbG/view?usp=drive_link	qknD9T	0	<b>[games]</b> - Chọn đội tuyển tỉnh Khánh Hòa  2017-2018	2026-05-30 16:26:01.5102	Test	376
+246	1	https://drive.google.com/file/d/1QUYp7M-mPZhrPIm_9mgO-d5nr3r-AJW0/view?usp=drive_link	YQzXI7	1	<b>[substring]</b> - Chọn đội tuyển tỉnh Khánh Hòa  2017-2018	2026-05-30 16:26:01.506364	Test	376
+249	1	https://drive.google.com/file/d/1f7-oluSZwJsASMm4Iad3kcLd5340bEKy/view?usp=drive_link	ydY2px	0	<b>[Đề bài]</b> - THCS tỉnh Quảng Nam  2022-2023	2026-05-30 16:30:06.740125	Đề	412
+250	1	https://drive.google.com/file/d/1602InQ1l_JUrfzohCJpA91DcUUEVU2SU/view?usp=drive_link	mQYTOM	0	<b>[thantuong]</b> - THCS tỉnh Quảng Nam  2022-2023	2026-05-30 16:30:06.746351	Test	412
+251	1	https://drive.google.com/file/d/1R-WBB-pxmElA0aKT50VS4A_uE4Jv6e82/view?usp=drive_link	HiOSYa	0	<b>[sodep]</b> - THCS tỉnh Quảng Nam  2022-2023	2026-05-30 16:30:06.746351	Test	412
+153	1	https://drive.google.com/file/d/10ulcq3MO71eFsjrT4FzVp8J9WzRPLFP1/view?usp=drive_link	1koAiB	0	<b>[Đề bài]</b> - Chọn đội tuyển tỉnh Bắc Ninh  2024-2025 - Ngày 1	2026-05-28 17:26:26.62607	Đề	426
+154	1	https://drive.google.com/file/d/1E3oFAbTDFmSIvs4igzscYT1tNwy0-hq4/view?usp=drive_link	1bptbE	0	<b>[Hướng dẫn]</b> - Chọn đội tuyển tỉnh Bắc Ninh  2024-2025 - Ngày 1	2026-05-28 17:26:26.634586	Hướng dẫn	426
+155	1	https://drive.google.com/file/d/1NdGR6n-tQ1eBjRVBis3FWaxrpeGQZBwg/view?usp=drive_link	hSiwMT	0	<b>[path]</b> - Chọn đội tuyển tỉnh Bắc Ninh  2024-2025 - Ngày 1	2026-05-28 17:26:26.639094	Test	426
+156	1	https://drive.google.com/file/d/15JaAjC_y1agXETNL45G3a05aXf63MUtU/view?usp=drive_link	5MnR71	0	<b>[mchar]</b> - Chọn đội tuyển tỉnh Bắc Ninh  2024-2025 - Ngày 1	2026-05-28 17:26:26.642699	Test	426
+157	1	https://drive.google.com/file/d/1RgIz2Q12Yh7MDcBTvuLFk67fO5cvtepF/view?usp=drive_link	wYeY58	0	<b>[incseq]</b> - Chọn đội tuyển tỉnh Bắc Ninh  2024-2025 - Ngày 1	2026-05-28 17:26:26.649909	Test	426
+209	1	https://drive.google.com/file/d/1G2BWNiOGQ6REH_9NI5RQIaZ5744-GH1k/view?usp=drive_link	sd1BV4	0	<b>[deferent]</b> - Chọn đội tuyển Quốc gia tỉnh Thái Bình  2023-2024 - Ngày 1	2026-05-30 14:26:43.106694	Test	417
+212	1	https://drive.google.com/file/d/1xA_o5jqH0FZ05ZV_Akv-SDqxXo72p06g/view?usp=drive_link	i733se	1	<b>[tangqua]</b> - Đề thi Tuyển sinh 10 tỉnh Quảng Trị  2022-2023	2026-05-30 14:29:01.990628	Test	416
+211	1	https://drive.google.com/file/d/1Guyfovw_W_Y7qDaPP9Juc6JA5kYq1OWH/view?usp=drive_link	spiDzO	1	<b>[xaudx]</b> - Đề thi Tuyển sinh 10 tỉnh Quảng Trị  2022-2023	2026-05-30 14:29:01.986565	Test	416
+252	1	https://drive.google.com/file/d/1sqCqM11pLNpchonjtLpLIK8lWkB0F_20/view?usp=drive_link	wVrv8h	0	<b>[lixi]</b> - THCS tỉnh Quảng Nam  2022-2023	2026-05-30 16:30:06.754205	Test	412
+253	1	https://drive.google.com/file/d/1If1Uon3wNL76JyyM15QMa1_i3RbW2R_S/view?usp=drive_link	7OaOZI	0	<b>[Đề bài]</b> - THCS tỉnh Quảng Nam  2018-2019	2026-05-30 16:31:01.916358	Đề	411
+254	1	https://drive.google.com/file/d/19ugoMLLWv6wTmFmHmznfOq0HWAZImz6D/view?usp=drive_link	nPaLYh	0	<b>[sort]</b> - THCS tỉnh Quảng Nam  2018-2019	2026-05-30 16:31:01.924814	Test	411
+255	1	https://drive.google.com/file/d/1plv28w3pgG2UgSkeOTgYugY_qpX1fZLU/view?usp=drive_link	8vj22v	0	<b>[lucky]</b> - THCS tỉnh Quảng Nam  2018-2019	2026-05-30 16:31:01.928708	Test	411
+256	1	https://drive.google.com/file/d/1t715EqkwPTkY6uEcHYPl8Ozhk36nNRE3/view?usp=drive_link	XVvnzt	0	<b>[lcs]</b> - THCS tỉnh Quảng Nam  2018-2019	2026-05-30 16:31:01.928708	Test	411
+257	1	https://drive.google.com/file/d/19JAw85db_BrOixVtCZ-ZiBvVyRR9eKAW/view?usp=drive_link	d9a2Mo	0	<b>[beauty]</b> - THCS tỉnh Quảng Nam  2018-2019	2026-05-30 16:31:01.936331	Test	411
+213	1	https://drive.google.com/file/d/1DIW90axkwnCC9jaelkRXh5bOYtYRd2TN/view?usp=drive_link	zv1HAg	2	<b>[tanghoa]</b> - Đề thi Tuyển sinh 10 tỉnh Quảng Trị  2022-2023	2026-05-30 14:29:01.990628	Test	416
+8	1	https://drive.google.com/drive/folders/1Uva-uaVo_s1krAOeisl9tV4UCE5xdBlf?usp=drive_link	FM33zm	1	Đề thi HSG Chọn đội tuyển QG TP Hải Phòng năm học 2019-2020 - Ngày 1	2026-05-02 16:26:46.858893	all	323
+158	1	https://drive.google.com/file/d/1QFgtB4YfoMJ-nt9lIWShq51neME4F5RI/view?usp=drive_link	l0Iaw9	0	<b>[Đề bài]</b> - Chọn đội tuyển Quốc gia tỉnh Bắc Ninh  2024-2025 - Ngày 2	2026-05-30 07:36:58.662828	Đề	427
+159	1	https://drive.google.com/file/d/11BQ87-TPPrOmUbOnvx8ajTot798ccO0N/view?usp=drive_link	yO55b1	0	<b>[Hướng dẫn]</b> - Chọn đội tuyển Quốc gia tỉnh Bắc Ninh  2024-2025 - Ngày 2	2026-05-30 07:36:58.822437	Hướng dẫn	427
+160	1	https://drive.google.com/file/d/1ipA8cPDrFCX0DhyKbEC7j73VZKQIk-65/view?usp=drive_link	j8RMeh	0	<b>[cards]</b> - Chọn đội tuyển Quốc gia tỉnh Bắc Ninh  2024-2025 - Ngày 2	2026-05-30 07:36:58.842849	Test	427
+161	1	https://drive.google.com/file/d/1fQCgVmX-f76DQYaviIijwiSEg7-aaoJF/view?usp=drive_link	m9pQ8G	0	<b>[game_bn]</b> - Chọn đội tuyển Quốc gia tỉnh Bắc Ninh  2024-2025 - Ngày 2	2026-05-30 07:37:39.495576	Test	427
+162	1	https://drive.google.com/file/d/1rYEmq8Q9c0s026Uf09DXGttfDGJrRXnu/view?usp=drive_link	BL6ie3	0	<b>[narr]</b> - Chọn đội tuyển Quốc gia tỉnh Bắc Ninh  2024-2025 - Ngày 2	2026-05-30 07:37:39.510681	Test	427
+163	1	https://drive.google.com/file/d/1HDeGOabriEhZSoC6e5SkHY1pKz8IUMcW/view?usp=drive_link	5vw8Fi	0	<b>[testroom]</b> - Chọn đội tuyển Quốc gia tỉnh Bắc Ninh  2024-2025 - Ngày 2	2026-05-30 07:37:39.527208	Test	427
+263	1	https://drive.google.com/file/d/1Trxmo_OjzONiP6Pb0YQwLFummNh0eMAY/view?usp=drive_link	ieNrCR	0	<b>[Đề bài]</b> - THPT TP Hải Phòng  2016-2017 - Bảng Chuyên	2026-05-30 16:33:15.978995	Đề	325
+215	1	https://drive.google.com/file/d/18XGJH0WotFhZRp22-tIOn2nngB7Rfoza/view?usp=drive_link	1UPZav	0	<b>[Đề bài]</b> - THPT tỉnh Quảng Trị  2021-2022	2026-05-30 14:40:21.109796	Đề	415
+216	1	https://drive.google.com/file/d/1_-jnTXQP5lYzYMfJ6WFv0u1p7T-hBEGm/view?usp=drive_link	7kwH9C	0	<b>[Hướng dẫn]</b> - THPT tỉnh Quảng Trị  2021-2022	2026-05-30 14:40:21.126462	Hướng dẫn	415
+217	1	https://drive.google.com/file/d/15kVn37W-w5ySfjaV_0aWRBCsGk6fVz9m/view?usp=drive_link	TdBnLf	0	<b>[sodepqt]</b> - THPT tỉnh Quảng Trị  2021-2022	2026-05-30 14:40:21.136547	Test	415
+218	1	https://drive.google.com/file/d/1OAd9P-PiR349f9H7QDuR-SnuBMRC6jxn/view?usp=drive_link	6anYCI	0	<b>[matkhauqt]</b> - THPT tỉnh Quảng Trị  2021-2022	2026-05-30 14:40:21.140699	Test	415
+219	1	https://drive.google.com/file/d/1CODgNdK9MUCraD85pRbZEFU07iSbKDj0/view?usp=drive_link	u0k7cL	0	<b>[hopqua]</b> - THPT tỉnh Quảng Trị  2021-2022	2026-05-30 14:40:21.145153	Test	415
+264	1	https://drive.google.com/drive/folders/1-FQzo0Xe-EI5tB_QEIrqHPLT1g8yV-gM?usp=drive_link	Dns5ZP	0	<b>[WARNING]</b> - THPT TP Hải Phòng  2016-2017 - Bảng Chuyên	2026-05-30 16:33:15.986287	Test	325
+265	1	https://drive.google.com/drive/folders/1GIjwgdYoRouwlaEW9-c3W8Y3pHeMhpZw?usp=drive_link	ee1cMj	0	<b>[SUMXOR]</b> - THPT TP Hải Phòng  2016-2017 - Bảng Chuyên	2026-05-30 16:33:15.990558	Test	325
+266	1	https://drive.google.com/drive/folders/1yQygpIlXC3RsW-ZTSsHuMTjub-GMWxSy?usp=drive_link	Onkqse	0	<b>[PIECES]</b> - THPT TP Hải Phòng  2016-2017 - Bảng Chuyên	2026-05-30 16:33:15.990558	Test	325
+267	1	https://drive.google.com/file/d/1GLz-nJqixT8-sx9n4sQuogNCAeKRoQJD/view?usp=drive_link	h39Czq	0	<b>[Đề bài]</b> - THPT TP Hải Phòng  2015-2016 - bảng A1	2026-05-30 16:34:16.671033	Đề	326
+220	1	https://drive.google.com/file/d/1UutebapHMhGEWHAxq0eRTrwyDo-8BeKg/view?usp=drive_link	7XjgIP	5	<b>[busqt]</b> - THPT tỉnh Quảng Trị  2021-2022	2026-05-30 14:40:21.148966	Test	415
+258	1	https://drive.google.com/file/d/18FSPc_lhgWjV_CZusTUvBLxWyst9QvXS/view?usp=drive_link	Dz9gFX	0	<b>[Đề bài]</b> - THCS tỉnh Phú Thọ  2023-2024 - Cấp huyện	2026-05-30 16:32:13.719983	Đề	410
+259	1	https://drive.google.com/file/d/1hG-oCD-eDPUawo3KQqFP-ANftR6g9iRG/view?usp=drive_link	Xyt7qq	0	<b>[muasach]</b> - THCS tỉnh Phú Thọ  2023-2024 - Cấp huyện	2026-05-30 16:32:13.726146	Test	410
+260	1	https://drive.google.com/file/d/1LJ-dki8IWPX6U7BoNsgeadWG-B4RrAJg/view?usp=drive_link	mbBiuV	0	<b>[matong]</b> - THCS tỉnh Phú Thọ  2023-2024 - Cấp huyện	2026-05-30 16:32:13.730135	Test	410
+261	1	https://drive.google.com/file/d/1QGQUHjfyGj0_BzSPf4kpopxyL3k2Xe8C/view?usp=drive_link	PFyeEc	0	<b>[doigiay]</b> - THCS tỉnh Phú Thọ  2023-2024 - Cấp huyện	2026-05-30 16:32:13.730135	Test	410
+262	1	https://drive.google.com/file/d/1F8H9ySNH4U3ayZhA-RU7Xn3Xh5EOoqXz/view?usp=drive_link	AfEyj4	0	<b>[bannhac]</b> - THCS tỉnh Phú Thọ  2023-2024 - Cấp huyện	2026-05-30 16:32:13.736071	Test	410
+268	1	https://drive.google.com/drive/folders/1G1o0O2ZLWfjKz9gei7zN8N_6AFl0TsD2?usp=drive_link	1NyXEp	0	<b>[maxpath]</b> - THPT TP Hải Phòng  2015-2016 - bảng A1	2026-05-30 16:34:16.676351	Test	326
+269	1	https://drive.google.com/drive/folders/1SWwZDgnaupcIF89Ex5G1GZOOKdM2hoGZ?usp=drive_link	xs8nwd	0	<b>[ksplit]</b> - THPT TP Hải Phòng  2015-2016 - bảng A1	2026-05-30 16:34:16.679883	Test	326
+270	1	https://drive.google.com/drive/folders/119Y067HsRa_ho4TbCK5XvYqAitpRyJ9L?usp=drive_link	5E4CBu	0	<b>[bocsoi2015]</b> - THPT TP Hải Phòng  2015-2016 - bảng A1	2026-05-30 16:34:16.6823	Test	326
+9	1	https://drive.google.com/drive/folders/1xJqpwNLo58LUs1x5nKxXB-xdFpl82HeC?usp=drive_link	KdfCHm	0	Đề thi HSG Chọn đội tuyển QG TP Hải Phòng năm học 2019-2020 - Ngày 2	2026-05-02 16:28:03.854779	all	324
+271	1	https://drive.google.com/file/d/171f9rmmfYbCynocNJQRgwsbe-XRLpCJr/view?usp=drive_link	BaA7Uy	0	<b>[Đề bài]</b> - THPT TP Hải Phòng  2017-2018 - bảng Chuyên	2026-05-30 16:35:38.093095	Đề	327
+272	1	https://drive.google.com/drive/folders/1uwqkr2cfugOnbGQ_9i2Mct14jsk_XU0T?usp=drive_link	2AMaml	0	<b>[virus]</b> - THPT TP Hải Phòng  2017-2018 - bảng Chuyên	2026-05-30 16:35:38.096017	Test	327
+273	1	https://drive.google.com/drive/folders/1SFSkiGdpudenEZQp9mYjCDfRB5XkR8xj?usp=drive_link	wsgJtS	0	<b>[ktree]</b> - THPT TP Hải Phòng  2017-2018 - bảng Chuyên	2026-05-30 16:35:38.096017	Test	327
+274	1	https://drive.google.com/drive/folders/1WzbJWRCiYGAmkFdsJNFzVZqbgb_haHSa?usp=drive_link	PmMe9f	0	<b>[average]</b> - THPT TP Hải Phòng  2017-2018 - bảng Chuyên	2026-05-30 16:35:38.096017	Test	327
+275	1	https://drive.google.com/file/d/1Uc8PKmd3WjNVh3Ya1TVZrNJ3sFdairkg/view?usp=drive_link	YXD3mb	0	<b>[Đề bài]</b> - THPT TP Hải Phòng  2021-2022	2026-05-30 16:36:34.770212	Đề	328
+276	1	https://drive.google.com/file/d/1KUuEcqGlJB24pDq-NhssamooW-cv0sJ6/view?usp=drive_link	XdCxQK	0	<b>[Hướng dẫn]</b> - THPT TP Hải Phòng  2021-2022	2026-05-30 16:36:34.770559	Hướng dẫn	328
+277	1	https://drive.google.com/file/d/12ZLD-2K6GAqUbiptCq-1P5OxD0DI0eTH/view?usp=drive_link	M42dUq	0	<b>[bai1]</b> - THPT TP Hải Phòng  2021-2022	2026-05-30 16:36:34.776021	Test	328
+2	1	https://drive.google.com/drive/folders/1xezMMsqRRHshbzW86rTe4M2V9i-9PBkH?usp=sharing	ohJii3	4	Đề thi HSG THPT TP Hải Phòng năm học 2016-2017 - Bảng Chuyên	2026-05-01 15:56:12.334547	all	325
+3	1	https://drive.google.com/drive/folders/1qdgpeWZeqpythHxWl3HsoFzmHrMEXtX0?usp=drive_link	oGtZy3	2	Đề thi HSG THPT TP Hải Phòng năm học 2015-2016 - bảng A1	2026-05-01 16:23:48.273896	all	326
+4	1	https://drive.google.com/drive/folders/1T-k44Cls2wBpT319AdkhK2ruQamWuAHw?usp=drive_link	vJZbJo	0	Đề thi HSG THPT TP Hải Phòng năm học 2017-2018 - bảng Chuyên	2026-05-01 16:26:56.366528	all	327
+5	1	https://drive.google.com/drive/folders/1Rtppz1m48GEPNbtq_e_tyhpvFnMHj5Jx?usp=drive_link	FIm89u	1	Đề thi HSG THPT TP Hải Phòng năm học 2021-2022	2026-05-02 16:03:27.722087	all	328
+6	1	https://drive.google.com/drive/folders/1JdaNoJNurQYx_YsGmL9PgIraUWgC1-E8?usp=drive_link	mW2mqY	0	Đề thi HSG Chọn đội tuyển QG TP Hải Phòng năm học 2018-2019 - Ngày 1	2026-05-02 16:15:33.653293	all	329
+177	1	https://drive.google.com/drive/folders/1Lf7REtGYyLmmQJoxht4M5KV3M_JGMHuB?usp=drive_link	qC5066	1	<b>[bai4]</b> - Đề thi Tuyển sinh 10 tỉnh Bà Rịa - Vũng Tàu  2025-2026	2026-05-30 14:15:47.59793	Test	424
+278	1	https://drive.google.com/file/d/1Ug_lAZ8R4Kd6AvJDKpM5mvxsLlvD_JR4/view?usp=drive_link	ervGCP	0	<b>[bai2]</b> - THPT TP Hải Phòng  2021-2022	2026-05-30 16:36:34.780402	Test	328
+279	1	https://drive.google.com/file/d/1z7BJXc9ciidLdTrsV8o6Q4hwy9MBrRAX/view?usp=drive_link	d7AZGn	0	<b>[bai3]</b> - THPT TP Hải Phòng  2021-2022	2026-05-30 16:36:34.78488	Test	328
+280	1	https://drive.google.com/file/d/1En0sekZ8ei9gIr8DMUKJzrBRaVSYcWQG/view?usp=drive_link	5Q9Xxc	0	<b>[Đề bài]</b> - Chọn đội tuyển QG TP Hải Phòng  2018-2019 - Ngày 1	2026-05-30 16:37:30.479385	Đề	329
+281	1	https://drive.google.com/drive/folders/1RxwS0NAyHPVlHzeFe9l9o2FQTtnDFnaZ?usp=drive_link	o5R3Rp	0	<b>[ATTACK]</b> - Chọn đội tuyển QG TP Hải Phòng  2018-2019 - Ngày 1	2026-05-30 16:37:30.479385	Test	329
+282	1	https://drive.google.com/drive/folders/1yzO8WNe0Oxmtvb3GQcnhVcKESJh0X7T_?usp=drive_link	L6IVos	0	<b>[GRAPH18]</b> - Chọn đội tuyển QG TP Hải Phòng  2018-2019 - Ngày 1	2026-05-30 16:37:30.486085	Test	329
+283	1	https://drive.google.com/drive/folders/1i0zh00YRU4oslKdlLSJ1C-4DDI9Rmy7s?usp=drive_link	14eYda	0	<b>[MAXPRO]</b> - Chọn đội tuyển QG TP Hải Phòng  2018-2019 - Ngày 1	2026-05-30 16:37:30.490154	Test	329
+284	1	https://drive.google.com/file/d/1RBJgzt0dP4Pi2b5GRhKq3jqm8zSho6Vt/view?usp=drive_link	IaHtBE	0	<b>[Đề bài]</b> - Chọn đội tuyển QG TP Hải Phòng  2018-2019 - Ngày 2	2026-05-30 16:38:27.806394	Đề	322
+285	1	https://drive.google.com/drive/folders/1SgR8sru1zB9yi7PcqdK7fk_mKn4vq1fP?usp=drive_link	C6JXk3	0	<b>[Kpalin]</b> - Chọn đội tuyển QG TP Hải Phòng  2018-2019 - Ngày 2	2026-05-30 16:38:27.811829	Test	322
+286	1	https://drive.google.com/drive/folders/1vmBAC0uGwKOzpBemXVIrcuCmvolvnHu9?usp=drive_link	J3aStj	0	<b>[Median]</b> - Chọn đội tuyển QG TP Hải Phòng  2018-2019 - Ngày 2	2026-05-30 16:38:27.811829	Test	322
+287	1	https://drive.google.com/drive/folders/1v_3zUYHXcv_65Omgdda67IR5jPjCxkJ5?usp=drive_link	wzV1tu	0	<b>[Tree]</b> - Chọn đội tuyển QG TP Hải Phòng  2018-2019 - Ngày 2	2026-05-30 16:38:27.816058	Test	322
+288	1	https://drive.google.com/file/d/1b_T3uc8Y6eciGs8YY7G9KnluSCnU3d5L/view?usp=drive_link	wgeYRl	0	<b>[Đề bài]</b> - Chọn đội tuyển QG TP Hải Phòng  2019-2020 - Ngày 1	2026-05-30 16:39:57.416096	Đề	323
+289	1	https://drive.google.com/drive/folders/1-Fk_-JmMvJV868PuH6zPo7W_9qJDBwME?usp=drive_link	fRcYvr	0	<b>[MQUERY]</b> - Chọn đội tuyển QG TP Hải Phòng  2019-2020 - Ngày 1	2026-05-30 16:39:57.420345	Test	323
+290	1	https://drive.google.com/drive/folders/1gRHi7DhSSamhi9ynzqYto7nHWWNbCsPz?usp=drive_link	RkmvlS	0	<b>[GRAPH19]</b> - Chọn đội tuyển QG TP Hải Phòng  2019-2020 - Ngày 1	2026-05-30 16:39:57.427044	Test	323
+291	1	https://drive.google.com/drive/folders/1EmwKrcjVEBFSDN711DvbcnrDv9Yrog7m?usp=drive_link	qPOXa4	0	<b>[GIFT]</b> - Chọn đội tuyển QG TP Hải Phòng  2019-2020 - Ngày 1	2026-05-30 16:39:57.427044	Test	323
+221	1	https://drive.google.com/file/d/1pOvhQnN6-IVHbZghpV5HpBwaWZiE_oZX/view?usp=drive_link	y78od3	0	<b>[Đề bài]</b> - THCS tỉnh Quảng Ninh  2021-2022	2026-05-30 16:06:25.671695	Đề	414
+222	1	https://drive.google.com/file/d/1jc9lgHy7KgvvnvZZay-DtToKVgixjpWV/view?usp=drive_link	XZlS9X	0	<b>[Hướng dẫn]</b> - THCS tỉnh Quảng Ninh  2021-2022	2026-05-30 16:06:25.686319	Hướng dẫn	414
+223	1	https://drive.google.com/file/d/1ov9u34vWhKkwiW0XT9eJowwFGx-ivSeH/view?usp=drive_link	x37E2e	0	<b>[rab]</b> - THCS tỉnh Quảng Ninh  2021-2022	2026-05-30 16:06:25.690401	Test	414
+224	1	https://drive.google.com/file/d/1rtLjgGtTYA6ichXLDlx7M53kLDt_3IRp/view?usp=drive_link	g99Dz3	0	<b>[new]</b> - THCS tỉnh Quảng Ninh  2021-2022	2026-05-30 16:06:25.693345	Test	414
+225	1	https://drive.google.com/file/d/1B4wjkLRe71gDt7-WDbZriwizyi0J_HlA/view?usp=drive_link	exnVwk	0	<b>[gcd]</b> - THCS tỉnh Quảng Ninh  2021-2022	2026-05-30 16:06:25.698172	Test	414
+226	1	https://drive.google.com/file/d/1kR4cnP-ZULdDhxIkXcRJK-IoXo7S7nOg/view?usp=drive_link	AfB2Xx	0	<b>[che]</b> - THCS tỉnh Quảng Ninh  2021-2022	2026-05-30 16:06:25.702843	Test	414
+227	1	https://drive.google.com/file/d/1DYNMRBiJ52QhiOeE88NWBOGumDtpGBq4/view?usp=drive_link	IOM4Sv	0	<b>[Đề bài]</b> - THCS tỉnh Khánh Hòa  2020-2021 - Vạn Ninh	2026-05-30 16:09:59.93276	Đề	381
+228	1	https://drive.google.com/file/d/1EAS68FfqEeSP-9UXIGVHouacAaTXb2lT/view?usp=drive_link	KNbNB8	0	<b>[Hướng dẫn]</b> - THCS tỉnh Khánh Hòa  2020-2021 - Vạn Ninh	2026-05-30 16:09:59.950459	Hướng dẫn	381
+229	1	https://drive.google.com/file/d/1k4ShbH9DBiBRdbJjiLeNMaBuohlFK2By/view?usp=drive_link	l7UUqs	0	<b>[misq]</b> - THCS tỉnh Khánh Hòa  2020-2021 - Vạn Ninh	2026-05-30 16:09:59.954043	Test	381
+230	1	https://drive.google.com/file/d/1yDVGmxJHwYVje_n8QviVSX_W8Rgd9vMm/view?usp=drive_link	QzogVH	0	<b>[isd]</b> - THCS tỉnh Khánh Hòa  2020-2021 - Vạn Ninh	2026-05-30 16:09:59.957143	Test	381
+231	1	https://drive.google.com/file/d/1AKBo8vsYcwP_7zJNGLZTggLwwbUP5f0q/view?usp=drive_link	fbkY27	0	<b>[hhkeo]</b> - THCS tỉnh Khánh Hòa  2020-2021 - Vạn Ninh	2026-05-30 16:09:59.961264	Test	381
+232	1	https://drive.google.com/file/d/1PxT0P90R2VqFjSTBcmTsr5Ge8lLRWXxc/view?usp=drive_link	Kd5p0m	0	<b>[duathuyen]</b> - THCS tỉnh Khánh Hòa  2020-2021 - Vạn Ninh	2026-05-30 16:09:59.965289	Test	381
+292	1	https://drive.google.com/file/d/1_-YbruPhHMeUdQt_Ag1KY0v1a5zwA7fW/view?usp=drive_link	sLVMFi	0	<b>[Đề bài]</b> - Chọn đội tuyển Quốc gia tỉnh Phú Thọ  2020-2021 - Ngày 1	2026-05-30 16:51:18.786565	Đề	409
+293	1	https://drive.google.com/file/d/19YEw0CAg2qfPorKbNPWX6BPyUfEjQqS0/view?usp=drive_link	VghG0e	0	<b>[keyboard]</b> - Chọn đội tuyển Quốc gia tỉnh Phú Thọ  2020-2021 - Ngày 1	2026-05-30 16:51:18.806871	Test	409
+294	1	https://drive.google.com/file/d/1GNFYssCy6vCYZLmpD0oTYIAt4UvDeF38/view?usp=drive_link	O9YxuW	0	<b>[mincost]</b> - Chọn đội tuyển Quốc gia tỉnh Phú Thọ  2020-2021 - Ngày 1	2026-05-30 16:51:18.810936	Test	409
+295	1	https://drive.google.com/file/d/10GoMMqOsjgeyPrqjBBrJLa-VXnJ4PuOp/view?usp=drive_link	D1fq72	0	<b>[wiseq]</b> - Chọn đội tuyển Quốc gia tỉnh Phú Thọ  2020-2021 - Ngày 1	2026-05-30 16:51:18.814821	Test	409
+75	1	https://drive.google.com/drive/folders/1OfGLV8RVm-rKhxI9lwSB6BpI-nfeJVAT?usp=drive_link	Ebm5vs	2	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Long An năm học 2021-2022 - Ngày 1	2026-05-11 09:35:22.14186	all	393
+169	1	https://drive.google.com/file/d/1J2Wcf7mmtzKvyH12QEcRY-UfNHy9Fp1w/view?usp=drive_link	6qm4Rp	0	<b>[Đề bài]</b> - THCS tỉnh Khánh Hòa  2016-2017	2026-05-30 07:46:32.943583	Đề	425
+233	1	https://drive.google.com/file/d/1s0LYZYcemTpYr2wfVOcquiqlhf9YCvmU/view?usp=drive_link	bVIoUF	0	<b>[Đề bài]</b> - THPT tỉnh Quảng Nam  2023-2024	2026-05-30 16:21:21.276135	Đề	413
+234	1	https://drive.google.com/file/d/1xvMQEBT8snqI0GYpe00sjv0EHVFsVU0z/view?usp=drive_link	xwJfrw	0	<b>[Hướng dẫn]</b> - THPT tỉnh Quảng Nam  2023-2024	2026-05-30 16:21:21.286578	Hướng dẫn	413
+235	1	https://drive.google.com/file/d/1kX8nblItv33Cl3WE2TT7qVRT70z6PSfY/view?usp=drive_link	wWpFvY	0	<b>[po]</b> - THPT tỉnh Quảng Nam  2023-2024	2026-05-30 16:21:21.296091	Test	413
+236	1	https://drive.google.com/file/d/1oJnyp3dml5nGwi8ESdsghnvNgPXCfLMT/view?usp=drive_link	fOrjmn	0	<b>[nhatky]</b> - THPT tỉnh Quảng Nam  2023-2024	2026-05-30 16:21:21.296091	Test	413
+237	1	https://drive.google.com/file/d/1-j2h9nIAYrGBCNSSZxjP_uM7lFvyNxSN/view?usp=drive_link	d1oxIg	0	<b>[bomchum]</b> - THPT tỉnh Quảng Nam  2023-2024	2026-05-30 16:21:21.302789	Test	413
+238	1	https://drive.google.com/file/d/1jBLTFRlpsD9JUiZsJVNzosnlNhRoP5P0/view?usp=drive_link	xerfWa	0	<b>[ant]</b> - THPT tỉnh Quảng Nam  2023-2024	2026-05-30 16:21:21.306403	Test	413
+239	1	https://drive.google.com/file/d/1xWwcJbRW4QY1TB9xi5NaIKhY6Mg8U673/view?usp=drive_link	kVNgF9	0	<b>[Đề bài]</b> - THCS tỉnh Khánh Hòa  2018-2019 - Vạn Ninh	2026-05-30 16:22:41.532304	Đề	377
+240	1	https://drive.google.com/file/d/1vCU_O_m0-la4t7dzXTEZYjo8ltrUB3bm/view?usp=drive_link	imSw2Z	0	<b>[Hướng dẫn]</b> - THCS tỉnh Khánh Hòa  2018-2019 - Vạn Ninh	2026-05-30 16:22:41.538864	Hướng dẫn	377
+241	1	https://drive.google.com/file/d/1UffIDUsEHtz4vuiYvAC9Pq6xCZrDC2zP/view?usp=drive_link	GH0S4L	0	<b>[ratm]</b> - THCS tỉnh Khánh Hòa  2018-2019 - Vạn Ninh	2026-05-30 16:22:41.543056	Test	377
+242	1	https://drive.google.com/file/d/1KlQHFQYGCD90FCWZrp2ruU8TrBW3RIdu/view?usp=drive_link	b5AH3p	0	<b>[dolech]</b> - THCS tỉnh Khánh Hòa  2018-2019 - Vạn Ninh	2026-05-30 16:22:41.546906	Test	377
+243	1	https://drive.google.com/file/d/1wttGcqwr6w7ZMh0dKSA3UEn8w0X4c4E8/view?usp=drive_link	zspRIh	0	<b>[dhdt]</b> - THCS tỉnh Khánh Hòa  2018-2019 - Vạn Ninh	2026-05-30 16:22:41.551037	Test	377
+244	1	https://drive.google.com/file/d/1SaqOOM-lNJU0oc4teUZjYtqbbC_w3bG1/view?usp=drive_link	mYjsU5	3	<b>[chiada]</b> - THCS tỉnh Khánh Hòa  2018-2019 - Vạn Ninh	2026-05-30 16:22:41.554287	Test	377
+296	1	https://drive.google.com/file/d/14Y3SDcb0ztXAv1P9b86Qa7XXKa1YRZFW/view?usp=drive_link	JHwcnV	0	<b>[Đề bài]</b> - THCS tỉnh Phú Thọ  2018-2019	2026-05-30 21:24:14.072483	Đề	408
+297	1	https://drive.google.com/file/d/1LI5qEIVN0wMr2POQf1Fw7lgqADbbCwx_/view?usp=drive_link	fHGFUM	0	<b>[chiahetpt]</b> - THCS tỉnh Phú Thọ  2018-2019	2026-05-30 21:24:14.103931	Test	408
+298	1	https://drive.google.com/file/d/1vKFxqSTfiDwl0m8mMfXZcbDCsF4aMtJC/view?usp=drive_link	J56CPG	0	<b>[biendoim]</b> - THCS tỉnh Phú Thọ  2018-2019	2026-05-30 21:24:14.103931	Test	408
+299	1	https://drive.google.com/file/d/1O8VOtxXqpck-0c7efmrnEyF7_lc-se71/view?usp=drive_link	ufu3qX	0	<b>[Đề bài]</b> - Đề thi Olympic 30/4 năm 2024 - Khối 11	2026-05-30 21:25:02.858255	Đề	407
+300	1	https://drive.google.com/file/d/18-_kRzugfT6Dxv2jBT7BLZL8acm2YUvE/view?usp=drive_link	ZdhHzF	0	<b>[Hướng dẫn]</b> - Đề thi Olympic 30/4 năm 2024 - Khối 11	2026-05-30 21:25:02.867478	Hướng dẫn	407
+301	1	https://drive.google.com/file/d/1YiKZyxhHrA_26wdGEjQKoZjqPe4jMSgn/view?usp=drive_link	X8lSrV	0	<b>[robot_vt]</b> - Đề thi Olympic 30/4 năm 2024 - Khối 11	2026-05-30 21:25:02.872225	Test	407
+302	1	https://drive.google.com/file/d/1rCnrMeURMTS0UCAhHsuCH579UPS4rPUc/view?usp=drive_link	Vvjz0N	0	<b>[qsnail]</b> - Đề thi Olympic 30/4 năm 2024 - Khối 11	2026-05-30 21:25:02.872225	Test	407
+303	1	https://drive.google.com/file/d/13JVJ-Qxc8GxU3Ey3s4a394KpStcsVloQ/view?usp=drive_link	Wir3mZ	0	<b>[likenum]</b> - Đề thi Olympic 30/4 năm 2024 - Khối 11	2026-05-30 21:25:02.878458	Test	407
+304	1	https://drive.google.com/file/d/1Q7kZ1cCXzPjiVfX2vcTXhoFOI-uq8Opw/view?usp=drive_link	7SjkFl	0	<b>[Đề bài]</b> - Chọn đội tuyển QG TP Hải Phòng  2019-2020 - Ngày 2	2026-05-30 21:26:40.973073	Đề	324
+305	1	https://drive.google.com/drive/folders/1YNP9jf4uIeTSPM13lu0MGxJrcJ9SHccr?usp=drive_link	ZB9Y8i	0	<b>[Furthest]</b> - Chọn đội tuyển QG TP Hải Phòng  2019-2020 - Ngày 2	2026-05-30 21:26:40.973073	Test	324
+306	1	https://drive.google.com/drive/folders/1UGffR0jvFUy9RbuemZgY62NjfME4ZWgQ?usp=drive_link	RNN0g2	0	<b>[seq19]</b> - Chọn đội tuyển QG TP Hải Phòng  2019-2020 - Ngày 2	2026-05-30 21:26:40.98231	Test	324
+307	1	https://drive.google.com/drive/folders/11cN5VVkTFT-BuZUWB-s8_PrrLwyV4hBW?usp=drive_link	URIBDA	0	<b>[SUMSEG]</b> - Chọn đội tuyển QG TP Hải Phòng  2019-2020 - Ngày 2	2026-05-30 21:26:40.98231	Test	324
+170	1	https://drive.google.com/drive/folders/1fVAPRv6XPl6dtzGgR0TONumK3MV0aZZF?usp=drive_link	jSzdBV	0	<b>[capso]</b> - THCS tỉnh Khánh Hòa  2016-2017	2026-05-30 14:14:31.207315	Test	425
+171	1	https://drive.google.com/drive/folders/1LdOYQdq7IOBVD0Rp2dv86AOlJ2OW2alq?usp=drive_link	gxevzU	0	<b>[congso]</b> - THCS tỉnh Khánh Hòa  2016-2017	2026-05-30 14:14:48.041473	Test	425
+172	1	https://drive.google.com/drive/folders/1pN6cdzJmYL-Gx-_Ky-L8wu8AFkNg9KUp?usp=drive_link	LjZx4l	0	<b>[team]</b> - THCS tỉnh Khánh Hòa  2016-2017	2026-05-30 14:14:48.048409	Test	425
+173	1	https://drive.google.com/file/d/1UX9QsymQGVYdCwH9bYGywDDS9T5Ux4zs/view?usp=drive_link	xnFUXU	0	<b>[Đề bài]</b> - Đề thi Tuyển sinh 10 tỉnh Bà Rịa - Vũng Tàu  2025-2026	2026-05-30 14:15:47.574796	Đề	424
+174	1	https://drive.google.com/drive/folders/1jL4MWU8xVYIyCpyjKz76ITB4oEGNaGox?usp=drive_link	EoPD4o	0	<b>[bai1]</b> - Đề thi Tuyển sinh 10 tỉnh Bà Rịa - Vũng Tàu  2025-2026	2026-05-30 14:15:47.582547	Test	424
+175	1	https://drive.google.com/drive/folders/1mIoPTvZIQDpjXwEj7WsiSYKdOZ31pCo8?usp=drive_link	F1Y53Q	0	<b>[bai2]</b> - Đề thi Tuyển sinh 10 tỉnh Bà Rịa - Vũng Tàu  2025-2026	2026-05-30 14:15:47.588724	Test	424
+176	1	https://drive.google.com/drive/folders/1UxyzuoUWY2ApnesJrKMqVLx4ianecH_b?usp=drive_link	471mdt	0	<b>[bai3]</b> - Đề thi Tuyển sinh 10 tỉnh Bà Rịa - Vũng Tàu  2025-2026	2026-05-30 14:15:47.593447	Test	424
+178	1	https://drive.google.com/file/d/1VpQKww1dnt8DBMQ8F56yNLSK6qKf-iCU/view?usp=drive_link	LdcAsA	0	<b>[Đề bài]</b> - Chọn đội tuyển Quốc gia tỉnh Tiền Giang  2022-2023 - Ngày 2	2026-05-30 14:18:01.473672	Đề	423
+179	1	https://drive.google.com/file/d/1TGlMTbc5q59cG8T2tWBiFZ8SNFI5lFvd/view?usp=drive_link	iqmBH9	0	<b>[palind]</b> - Chọn đội tuyển Quốc gia tỉnh Tiền Giang  2022-2023 - Ngày 2	2026-05-30 14:18:01.484993	Test	423
+180	1	https://drive.google.com/file/d/1fN9xPlTgNYz1M6tRtztsc6DgFfP-umDr/view?usp=drive_link	C0qFzJ	0	<b>[network]</b> - Chọn đội tuyển Quốc gia tỉnh Tiền Giang  2022-2023 - Ngày 2	2026-05-30 14:18:01.489579	Test	423
+181	1	https://drive.google.com/file/d/101WVSSICs3baMW6Y2BiHKR1Z4hGLQcPR/view?usp=drive_link	UakQvg	0	<b>[xorseq]</b> - Chọn đội tuyển Quốc gia tỉnh Tiền Giang  2022-2023 - Ngày 2	2026-05-30 14:18:01.494602	Test	423
+182	1	https://drive.google.com/file/d/12Qp-XbektgKx6k6KFlJWCnUPPudnRiMt/view?usp=drive_link	pTpGFa	0	<b>[Đề bài]</b> - Chọn đội tuyển Quốc gia tỉnh Tiền Giang  2022-2023 - Ngày 1	2026-05-30 14:19:40.929536	Đề	422
+183	1	https://drive.google.com/file/d/18ixBCKOFmzlpoKYHx09Y_n65qopKCbTq/view?usp=drive_link	oqWhGG	0	<b>[desert]</b> - Chọn đội tuyển Quốc gia tỉnh Tiền Giang  2022-2023 - Ngày 1	2026-05-30 14:19:40.933826	Test	422
+184	1	https://drive.google.com/file/d/1G-XJUSxlBBiLywMnh25Bb1-wAi0fIVwN/view?usp=drive_link	UZZ3Nk	0	<b>[maxrem]</b> - Chọn đội tuyển Quốc gia tỉnh Tiền Giang  2022-2023 - Ngày 1	2026-05-30 14:19:40.939665	Test	422
+185	1	https://drive.google.com/file/d/1pi5ehg-x4oeYmS7IXCMItyzBupJHsPpW/view?usp=drive_link	Da7LRM	0	<b>[pairs]</b> - Chọn đội tuyển Quốc gia tỉnh Tiền Giang  2022-2023 - Ngày 1	2026-05-30 14:19:40.942912	Test	422
+186	1	https://drive.google.com/file/d/14nH2rc4rm00KxVWylFbe03cSpEmUA3IQ/view?usp=drive_link	G2VYIp	0	<b>[Đề bài]</b> - Chọn đội tuyển Quốc gia tỉnh Bà Rịa - Vũng Tàu  2022-2023	2026-05-30 14:21:31.510642	Đề	421
+187	1	https://drive.google.com/file/d/1viFzsAC5PTY6W6l1_7FEBVMdaGoOHkMz/view?usp=drive_link	IcojrB	0	<b>[difarr]</b> - Chọn đội tuyển Quốc gia tỉnh Bà Rịa - Vũng Tàu  2022-2023	2026-05-30 14:21:31.521963	Test	421
+188	1	https://drive.google.com/file/d/1s2tSZACNHxtuziG14szdt3OqWhmuEGgj/view?usp=drive_link	hIPO6g	0	<b>[tours]</b> - Chọn đội tuyển Quốc gia tỉnh Bà Rịa - Vũng Tàu  2022-2023	2026-05-30 14:21:31.526342	Test	421
+83	1	https://drive.google.com/drive/folders/1EZtaiGOPn8ke_h-xpxVWY1jXRON9Rya-?usp=drive_link	CvJfct	0	Đề thi HSG THCS tỉnh Ninh Bình năm học 2018-2019	2026-05-15 07:32:48.420643	all	401
+84	1	https://drive.google.com/drive/folders/1mcIznWHIXnsQrRH2qgg62uYFjh8-Bbkn?usp=drive_link	JbTpMz	0	Đề thi HSG THPT tỉnh Ninh Bình năm học 2020-2021	2026-05-15 07:34:04.499732	all	402
+85	1	https://drive.google.com/drive/folders/1JEfQ4ZBf1Ov-1eaVP29ebVaghSeKv1OW?usp=drive_link	rZgjRc	0	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Ninh Bình năm học 2022-2023 - Ngày 1	2026-05-15 07:35:35.453255	all	403
+86	1	https://drive.google.com/drive/folders/1abnu0pGY2ot2_LSKfrx9fuog-IgN16Oy?usp=drive_link	Ax0thJ	0	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Ninh Bình năm học 2022-2023 - Ngày 2	2026-05-15 07:37:03.442257	all	404
+87	1	https://drive.google.com/drive/folders/1i5R7A2XhMUo9h0MxwBPr2zzxymfNwM0f?usp=drive_link	iy4O0V	0	Đề thi HSG THCS tỉnh Ninh Bình năm học 2023-2024	2026-05-15 07:39:30.239668	all	405
+88	1	https://drive.google.com/drive/folders/1PvPcACwr0drRD4MaWSskJHo4XooJgcy6?usp=drive_link	yeQQeS	0	Đề thi Olympic 30/4 năm 2024 - Khối 10	2026-05-15 08:05:14.796633	all	406
+89	1	https://drive.google.com/drive/folders/1qgGllSuyhf0Pkr6CmP1RkVTnRiu8Ph9L?usp=drive_link	wSAmii	0	Đề thi Olympic 30/4 năm 2024 - Khối 11	2026-05-15 08:06:36.724843	all	407
+90	1	https://drive.google.com/drive/folders/1zHQq34D60FPxAnwzgnf8nISilBUmp_-z?usp=drive_link	ZkHthk	1	Đề thi HSG THCS tỉnh Phú Thọ năm học 2018-2019	2026-05-15 08:08:31.884695	all	408
+91	1	https://drive.google.com/drive/folders/1Rv0ifXIKpuVR5VxTlLaTVsPIsGfMbMRn?usp=drive_link	Kl7zyD	1	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Phú Thọ năm học 2020-2021 - Ngày 1	2026-05-15 08:10:10.472169	all	409
+189	1	https://drive.google.com/file/d/1Z1YXHpDEyfE2f891ijUbaoy6HZpYWs1p/view?usp=drive_link	QFR7gh	0	<b>[woods]</b> - Chọn đội tuyển Quốc gia tỉnh Bà Rịa - Vũng Tàu  2022-2023	2026-05-30 14:21:31.526342	Test	421
+190	1	https://drive.google.com/file/d/1CGDM6U1-6YAHRNJeWGDOI0UGu69z93RG/view?usp=drive_link	MJuZwn	0	<b>[Đề bài]</b> - Chọn đội tuyển Quốc gia TP Hải Phòng  2024-2025 - Ngày 2	2026-05-30 14:23:24.222337	Đề	420
+192	1	https://drive.google.com/drive/folders/1DQ2FQuox06plsudsHnPu0aYRIbCVfsfP?usp=drive_link	ZDPByX	0	<b>[digit]</b> - Chọn đội tuyển Quốc gia TP Hải Phòng  2024-2025 - Ngày 2	2026-05-30 14:23:24.230415	Test	420
+193	1	https://drive.google.com/drive/folders/11FSFl0EV2KLq2_7EKpvHQUbGyQ0dnEgo?usp=drive_link	Ot0Ayz	0	<b>[chase]</b> - Chọn đội tuyển Quốc gia TP Hải Phòng  2024-2025 - Ngày 2	2026-05-30 14:23:24.230415	Test	420
+191	1	https://drive.google.com/drive/folders/1EQAFQdaMLla0GeOCZnP2hpCZSnlrN4GU?usp=drive_link	N1vekW	2	<b>[hexangle]</b> - Chọn đội tuyển Quốc gia TP Hải Phòng  2024-2025 - Ngày 2	2026-05-30 14:23:24.22634	Test	420
+194	1	https://drive.google.com/file/d/14z_V7PdJMdlestGN-LQ8CfdmEGaEq6R4/view?usp=drive_link	XICXiZ	0	<b>[Đề bài]</b> - Chọn đội tuyển Quốc gia tỉnh Thanh Hóa  2023-2024 - Cấp trường	2026-05-30 14:24:35.258336	Đề	419
+195	1	https://drive.google.com/file/d/1qsR3AGbI8xRl5O-1cVsJRsX2VNvkTJ_2/view?usp=drive_link	YQLf4z	0	<b>[Hướng dẫn]</b> - Chọn đội tuyển Quốc gia tỉnh Thanh Hóa  2023-2024 - Cấp trường	2026-05-30 14:24:35.266949	Hướng dẫn	419
+196	1	https://drive.google.com/file/d/14oaePqLNvYkIRb7Ckp_lG3BKB3x5SzPY/view?usp=drive_link	TJNair	0	<b>[revstr]</b> - Chọn đội tuyển Quốc gia tỉnh Thanh Hóa  2023-2024 - Cấp trường	2026-05-30 14:24:35.269954	Test	419
+10	1	https://drive.google.com/drive/folders/1NgeiInwyeFA1nyAe-n6wzsrn0lJWpnay?usp=drive_link	2uhtex	1	Đề thi HSG Chọn đội tuyển QG TP Hải Phòng năm học 2021-2022	2026-05-02 17:01:44.419147	all	330
+12	1	https://drive.google.com/drive/folders/18k3ra1HoZIWJf6by_4zfiONsuFVA95_V?usp=drive_link	BJ6Juu	0	Đề thi HSG Chọn đội tuyển QG TP Hải Phòng năm học 2022-2023	2026-05-04 08:59:13.686139	all	331
+13	1	https://drive.google.com/drive/folders/1F64r2SlHmJMziahDzTnFpLULtjYnFmbU?usp=drive_link	8ibSEE	1	Đề thi HSG Chọn đội tuyển QG TP Hải Phòng năm học 2023-2024	2026-05-04 09:08:34.197614	all	332
+14	1	https://drive.google.com/drive/folders/1wxpo1kUV8TtdIB81FqLH9vS4oMH__Q47?usp=drive_link	9tT6c0	1	Đề thi HSG THCS TP Hải Phòng năm học 2023-2024	2026-05-04 09:09:38.395263	all	333
+15	1	https://drive.google.com/drive/folders/1mfR0nxEU0ynWjBLxj1yv3CF1YM8mQi14?usp=sharing	VT9RbN	0	Đề thi HSG Chọn đội tuyển QG TP Hải Phòng năm học 2024-2025 - Ngày 1	2026-05-04 09:55:50.175501	all	334
+16	1	https://drive.google.com/drive/folders/1Qhdj-QMRx9jnm9Eu9QyJW__Lf5ZvQWRX?usp=drive_link	iFdqdZ	0	Đề thi HSG THPT TP Hải Phòng năm học 2016-2017 - Bảng không chuyên	2026-05-06 14:44:59.649928	all	335
+17	1	https://drive.google.com/drive/folders/1LN8MmCIay9yalE-TrXaolD9Z-NvQjMhO?usp=drive_link	G6yZiZ	0	Đề thi HSG THPT TP Hải Phòng năm học 2017-2018 - Bảng không chuyên	2026-05-06 15:21:54.570949	all	336
+18	1	https://drive.google.com/drive/folders/1y2CsQyZfBlTb2KmoHrocAwox6jUI9A_F?usp=drive_link	ITD40w	0	Đề thi HSG THPT TP Hải Phòng năm học 2018-2019 - Bảng B	2026-05-06 15:24:38.964457	all	337
+19	1	https://drive.google.com/drive/folders/1h2cmejMkZP2tvlc1NSBt90M7aEabvyaf?usp=drive_link	a8rGHC	0	Đề thi HSG THPT TP Hải Phòng năm học 2019-2020 - Bảng không chuyên	2026-05-06 15:28:51.043419	all	338
+20	1	https://drive.google.com/drive/folders/1yknRFbtH0HyyoWSndn1ZqyYYRP2YSZqD?usp=sharing	ck9ICX	0	Đề thi HSG THPT TP Hải Phòng năm học 2020-2021 - Bảng B	2026-05-06 15:31:23.03388	all	339
+21	1	https://drive.google.com/drive/folders/1n5ftHXvCRcD5Lkr6PpreeH9wERPD2laE?usp=sharing	TMUhh0	0	Đề thi HSG THPT TP Hải Phòng năm học 2021-2022 - Bảng B	2026-05-06 15:33:31.098504	all	340
+22	1	https://drive.google.com/drive/folders/1h72WB2qTzi_WLioO56rhvZMvPw-zzlyL?usp=sharing	OdrNnH	0	Đề thi HSG THPT TP Hải Phòng năm học 2022-2023	2026-05-06 15:35:42.466932	all	341
+23	1	https://drive.google.com/drive/folders/1b8a2hYlJgTjYsgWp4G_OYcX_yerzYmtj?usp=sharing	77umFW	0	Đề thi HSG THPT TP Hải Phòng năm học 2023-2024	2026-05-06 15:37:58.638573	all	342
+24	1	https://drive.google.com/drive/folders/1fNey-pVBN7krHNkk9DShVSAP57FWHd8I?usp=sharing	4HKMAJ	0	Đề thi HSG THPT TP Hải Phòng năm học 2024-2025	2026-05-06 15:40:00.54742	all	343
+25	1	https://drive.google.com/drive/folders/1mbTgUBnbh2J4INE1_iU2GcWEPpALkTjX?usp=sharing	0xnucb	0	Đề thi HSG Chọn đội tuyển QG tỉnh Quảng Ninh năm học 2023-2024 - Ngày 1	2026-05-06 15:46:56.246123	all	344
+26	1	https://drive.google.com/drive/folders/1cbmj9z4zYkllE1TQVMjmlQ0MmwZyRd98?usp=drive_link	i0WlM1	0	Đề thi HSG THPT tỉnh Bắc Giang năm học 2021-2022	2026-05-06 15:56:00.354832	all	345
+27	1	https://drive.google.com/drive/folders/1Ai5YYDO_syX3Vt9a9BD7sPMWgRZ6xQLz?usp=sharing	gTi251	1	Đề thi HSG THPT tỉnh Bắc Giang năm học 2022-2023 - Lớp 11	2026-05-06 15:57:55.611966	all	346
+28	1	https://drive.google.com/drive/folders/1-z5KYrnIav4TnhWFCAFB__MZvwqQj4hw?usp=sharing	nmWXOu	0	Đề thi HSG THCS tỉnh Bà Rịa - Vũng Tàu năm học 2023-2024	2026-05-06 16:01:03.315268	all	347
+29	1	https://drive.google.com/drive/folders/15wf3b0fCZb9u8kEg69mLNQqV4AVO34Yr?usp=sharing	zjTTmT	1	Đề thi HSG THPT tỉnh Bình Phước năm học 2018-2019	2026-05-06 16:05:39.573971	all	348
+30	1	https://drive.google.com/drive/folders/15Ma5I_896IxR_ulSRL_FxCTh64S2rWXO?usp=sharing	gAAhoV	0	Đề thi HSG THPT tỉnh Bình Phước năm học 2021-2022	2026-05-06 16:07:32.709003	all	349
+31	1	https://drive.google.com/drive/folders/1al0V0gZLpNo_qSEHA7lQUmGmchboEjPO?usp=sharing	w1nQaL	1	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Bình Thuận năm học 2021-2022	2026-05-06 16:11:30.979801	all	350
+32	1	https://drive.google.com/drive/folders/1gOmjCOpDLnJIFO91tb9_KHLUFFzEPPij?usp=sharing	4yV1tA	1	Đề thi HSG THPT tỉnh Bình Thuận năm học 2021-2022	2026-05-06 16:13:04.687177	all	351
+33	1	https://drive.google.com/drive/folders/1AjpUPkQA3zgPBsDCwNhMlJNvsmluIDuK?usp=sharing	6Maa0X	1	Đề thi HSG THCS tỉnh Đắk Nông năm học 2018-2019	2026-05-07 10:24:22.780489	all	352
+35	1	https://drive.google.com/drive/folders/1h-rYJTraDF3LBdfGDNOziaYX0UFuitjK?usp=sharing	Py7ORS	0	Đề thi HSG THCS tỉnh Đắk Nông năm học 2022-2023	2026-05-07 10:27:25.445733	all	353
+36	1	https://drive.google.com/drive/folders/1PLQYf7ZJP-AiGCyJofSX0xOGUdeODla3?usp=sharing	fU19hC	0	Đề thi HSG THCS tỉnh Đồng Tháp năm học 2022-2023	2026-05-07 10:54:06.353804	all	354
+37	1	https://drive.google.com/drive/folders/1foG1mVXveBt4bMp1afZ7FfWuioYNrw8a?usp=sharing	XUdSl9	0	Đề thi HSG THPT tỉnh Gia Lai năm học 2020-2021	2026-05-07 10:56:04.158118	all	355
+38	1	https://drive.google.com/drive/folders/1lHeC2T5w9p2NdZgn3uYuW8DWTdaIWiVS?usp=sharing	MQBH0g	0	Đề thi HSG THPT tỉnh Hải Dương năm học 2017-2018	2026-05-07 10:57:14.445517	all	356
+39	1	https://drive.google.com/drive/folders/18RyRqwUO-oYsJ1DINa2b-m3vxJH_dIDi?usp=sharing	wcgXZ9	0	Đề thi HSG THPT tỉnh Hải Dương năm học 2023-2024	2026-05-07 10:59:02.61432	all	357
+40	1	https://drive.google.com/drive/folders/1V-zwhjweuqYLR_K4vQ_wUlyrbFCYTj21?usp=sharing	iBtxps	0	Đề thi HSG THPT tỉnh Hà Nam năm học 2019-2020	2026-05-07 11:03:31.549183	all	358
+41	1	https://drive.google.com/drive/folders/1y4ETxx1SQIfJx9IEWN_OPEx-CUN_tV4H?usp=sharing	jHdrTV	0	Đề thi HSG THPT tỉnh Hà Nam năm học 2020-2021	2026-05-07 11:06:47.555024	all	359
+42	1	https://drive.google.com/drive/folders/1zG4spqFGCfY52--wu5oofCi8l91kk8yc?usp=sharing	BnAxLT	0	Đề thi HSG THCS tỉnh Đắk Nông năm học 2020-2021	2026-05-07 11:25:41.190678	all	360
+43	1	https://drive.google.com/drive/folders/1QwYXfVSGwo7fbF5Nh1TvmVE44ugNCFwM?usp=sharing	WXLopM	0	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Hà Nam năm học 2022-2023	2026-05-07 11:32:30.591951	all	361
+44	1	https://drive.google.com/drive/folders/12fIR6oTCDR2MeeXp15p42cggR1g6Srmi?usp=sharing	9TiYaD	0	Đề thi HSG THCS TP Hà Nội năm học 2013-2014	2026-05-07 14:36:16.864911	all	362
+45	1	https://drive.google.com/drive/folders/1XLqZaUyFnr9_htpNdoNYZddas5w1q8Rx?usp=sharing	k3uQRF	1	Đề thi HSG THCS TP Hà Nội năm học 2014-2015	2026-05-07 14:37:50.185551	all	363
+46	1	https://drive.google.com/drive/folders/12CkAms66a0uNWHzYuZYGYOPyhkYS8r7f?usp=sharing	7Rb9oe	0	Đề thi HSG THCS TP Hà Nội năm học 2016-2017	2026-05-07 14:39:15.336409	all	364
+47	1	https://drive.google.com/drive/folders/1trFhyTph33BA2AHqsHyHRjpBAIWvON2D?usp=sharing	5lX1a2	0	Đề thi HSG THCS TP Hà Nội năm học 2017-2018	2026-05-07 14:41:15.576895	all	365
+48	1	https://drive.google.com/drive/folders/11XPVd86Fxfe7ty-Pn31qKUu1FcAVzX0D?usp=sharing	kSYefH	0	Đề thi HSG THCS TP Hà Nội năm học 2020-2021	2026-05-07 14:43:08.352055	all	366
+49	1	https://drive.google.com/drive/folders/19-kZbSSzGcO2MLc68-lIvYLGgmLnZpWb?usp=sharing	UfP2pC	0	Đề thi HSG THCS TP Hà Nội năm học 2023-2024	2026-05-07 14:45:00.39837	all	367
+50	1	https://drive.google.com/drive/folders/18WvQotWku7HkQMgJDImw1KOGmFuGWpUP?usp=sharing	Rvr7Iv	0	Đề thi HSG THPT tỉnh Hà Tĩnh năm học 2023-2024 - Lớp 10	2026-05-07 14:47:19.759642	all	368
+51	1	https://drive.google.com/drive/folders/1Y4C4wMnb3_URG4PRYqyQhCE_ZwkFMeL1?usp=sharing	HEZPVs	1	Đề thi HSG THPT tỉnh Hà Tĩnh năm học 2023-2024 - Lớp 12	2026-05-07 14:49:17.541631	all	369
+52	1	https://drive.google.com/drive/folders/1ROK3an7DrlYODRn_gnnvDqyBhQI9jF0i?usp=sharing	0Dc3Ur	1	Đề thi HSG THCS tỉnh Hòa Bình năm học 2017-2018	2026-05-07 14:51:51.577318	all	370
+53	1	https://drive.google.com/drive/folders/1lQQiaNltwfvvnFT8HZJ0ifA_dxXrmlfZ?usp=sharing	fBH5sQ	0	Đề thi HSG THCS tỉnh Hòa Bình năm học 2020-2021	2026-05-07 14:53:32.849965	all	371
+54	1	https://drive.google.com/drive/folders/1yFBPwrZOtP1KTnE2DTg9HB_1lmmZUHqB?usp=sharing	WWSfkN	0	Đề thi HSG THCS tỉnh Hòa Bình năm học 2021-2022	2026-05-07 14:54:52.655247	all	372
+55	1	https://drive.google.com/drive/folders/1JzxII6AYVPr2J7HC_dCg3RxUIXgIP6DR?usp=sharing	W3okX3	1	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Hòa Bình năm học 2023-2024	2026-05-07 14:57:07.86676	all	373
+56	1	https://drive.google.com/drive/folders/1WnmWGbggfqnHvraCFtN_rnSunB5s2HZ3?usp=sharing	FNjxX1	0	Đề thi HSG THCS tỉnh Hưng Yên năm học 2023-2024	2026-05-11 08:43:34.800062	all	374
+57	1	https://drive.google.com/drive/folders/1pzEQBuam4u4X71Au6oGVXhTk8sctsACW?usp=sharing	4S3jW0	0	Đề thi HSG THPT tỉnh Khánh Hòa năm học 2016-2017	2026-05-11 08:45:59.455141	all	375
+58	1	https://drive.google.com/drive/folders/1K6N1wXptQa6DGFalMDfpx4wDzv_fzh_n?usp=sharing	2Z8rRn	0	Đề thi HSG Chọn đội tuyển tỉnh Khánh Hòa năm học 2017-2018	2026-05-11 08:48:35.510575	all	376
+59	1	https://drive.google.com/drive/folders/1-H6VQ-LB7Pin82fGGdJrrki-DRo2bFd-?usp=sharing	JwJeV6	0	Đề thi HSG THCS tỉnh Khánh Hòa năm học 2018-2019 - Vạn Ninh	2026-05-11 08:51:29.571489	all	377
+60	1	https://drive.google.com/drive/folders/10lCb3ugIazdU5RHt1s4iuJ_gNBlZOwne?usp=drive_link	AoTG0u	3	Đề thi HSG THPT tỉnh Khánh Hòa năm học 2019-2020	2026-05-11 08:54:04.871084	all	378
+61	1	https://drive.google.com/drive/folders/1hNAp61NXwwjsznXmIUpLop0H4giGBjVD?usp=drive_link	Ux6m03	0	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Khánh Hòa năm học 2020-2021 - Ngày 1	2026-05-11 08:57:05.162043	all	379
+62	1	https://drive.google.com/drive/folders/1EK3CmovftU8j7v-2sfksMPlpeJNcTZzx?usp=drive_link	7JbpKt	0	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Khánh Hòa năm học 2020-2021 - Ngày 2	2026-05-11 08:58:56.448636	all	380
+63	1	https://drive.google.com/drive/folders/1Q58nafGpvhEeIoO9KDhEnN7hdCQ6fG59?usp=drive_link	WVFP3C	0	Đề thi HSG THCS tỉnh Khánh Hòa năm học 2020-2021 - Vạn Ninh	2026-05-11 09:01:43.866371	all	381
+64	1	https://drive.google.com/drive/folders/1MGqpNzR6bIJn5gQzU5KfSWZn5SFneEGY?usp=drive_link	d6XEUY	0	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Khánh Hòa năm học 2021-2022 - Ngày 1	2026-05-11 09:04:13.391237	all	382
+65	1	https://drive.google.com/drive/folders/1-xOqh_5uIhVgSQyrNyrVPiuwu2CCRURB?usp=drive_link	K6f4LK	0	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Khánh Hòa năm học 2021-2022 - Ngày 2	2026-05-11 09:05:53.226904	all	383
+66	1	https://drive.google.com/drive/folders/1tsyc34caFDJHogSTx5IHEQhB0A0b3q0o?usp=drive_link	x6JkZM	0	Đề thi HSG THCS tỉnh Khánh Hòa năm học 2023-2024	2026-05-11 09:08:24.758433	all	384
+67	1	https://drive.google.com/drive/folders/1rig4Y8JDcD1IR9MHTJSgsovAU4gGxj_i?usp=drive_link	nj4Ral	0	Đề thi HSG THCS tỉnh Khánh Hòa năm học 2023-2024 - Vạn Ninh	2026-05-11 09:12:09.529358	all	385
+68	1	https://drive.google.com/drive/folders/1IBSB33_vdvxkI2lD8L51AreB3mtkLsbP?usp=drive_link	jH9pBL	0	Đề thi HSG THPT tỉnh Khánh Hòa năm học 2025-2026	2026-05-11 09:13:55.388347	all	386
+69	1	https://drive.google.com/drive/folders/1GpO2DAxI9rj1rYzXlLLDIy2ti225kZ5K?usp=drive_link	VkjYvJ	0	Đề thi HSG THCS tỉnh Lâm Đồng năm học 2022-2023	2026-05-11 09:19:04.930542	all	387
+70	1	https://drive.google.com/drive/folders/1ovLXOIMJt2rYZggPcJwkngZk8PUehWQX?usp=drive_link	isrNiw	0	Đề thi HSG THCS tỉnh Lào Cai năm học 2019-2020	2026-05-11 09:23:53.941154	all	388
+71	1	https://drive.google.com/drive/folders/1O5cSPxNdxMKPCgi79VX1cvAu-rQ0uGxd?usp=drive_link	8mNe25	0	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Lào Cai năm học 2022-2023	2026-05-11 09:25:47.54079	all	389
+72	1	https://drive.google.com/drive/folders/1hZ7eE1vRAPoeJYbh6C4KS7Vh8WdfeY8y?usp=drive_link	YNFOtM	0	Đề thi Tuyển sinh 10 tỉnh Lào Cai năm học 2022-2023	2026-05-11 09:28:26.830736	all	390
+73	1	https://drive.google.com/drive/folders/1e9u4VekvjdLu24HYujcprdPoA45NDls_?usp=drive_link	A4XzXp	0	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Long An năm học 2020-2021 - Ngày 1	2026-05-11 09:32:50.883133	all	391
+74	1	https://drive.google.com/drive/folders/1isPs7jSzAXDjiNSap6_fSXGLSjPmfw9h?usp=drive_link	MqYHk9	0	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Long An năm học 2020-2021 - Ngày 2	2026-05-11 09:34:08.212651	all	392
+197	1	https://drive.google.com/file/d/17axr5cVmog_J-qL4Y60uFy4MGvzBvCvi/view?usp=drive_link	SvlO6d	0	<b>[project]</b> - Chọn đội tuyển Quốc gia tỉnh Thanh Hóa  2023-2024 - Cấp trường	2026-05-30 14:24:35.2731	Test	419
+76	1	https://drive.google.com/drive/folders/1H3jS-CzvmySrNLwp0NWHZcZjKZp_ctl8?usp=drive_link	KA9PRn	0	Đề thi HSG THPT tỉnh Nam Định năm học 2021-2022	2026-05-11 09:41:29.803213	all	394
+77	1	https://drive.google.com/drive/folders/1gQQnPtJn_VCmdsbCLlsefp3xEHcXE_3T?usp=drive_link	pA15wp	1	Đề thi HSG THCS tỉnh Nam Định năm học 2023-2024	2026-05-11 09:43:31.571264	all	395
+78	1	https://drive.google.com/drive/folders/1Rs03dziJ0S0E06Ch1LIlmmme-kZH4J7C?usp=drive_link	YKNFgU	0	Đề thi HSG THPT tỉnh Nghệ An năm học 2017-2018 - Lớp 11	2026-05-15 07:25:44.325209	all	396
+79	1	https://drive.google.com/drive/folders/1_ilOkrUJ8JoQXPXt7JRybacjmBW7023L?usp=drive_link	D4E3tF	0	Đề thi HSG THPT tỉnh Nghệ An năm học 2018-2019 - Bảng A	2026-05-15 07:27:13.197052	all	397
+80	1	https://drive.google.com/drive/folders/1M_X9BLvPif9B3SnVTrkZcq4mdqmIBSM_?usp=drive_link	Ez8MCj	0	Đề thi HSG THPT tỉnh Nghệ An năm học 2018-2019 - Lớp 11	2026-05-15 07:28:55.68023	all	398
+81	1	https://drive.google.com/drive/folders/1rt7FC96d-_xzuxJKI4hjULwTaL3_5pPE?usp=drive_link	HBanUN	0	Đề thi HSG THPT tỉnh Nghệ An năm học 2020-2021 - Bảng A	2026-05-15 07:30:07.621602	all	399
+82	1	https://drive.google.com/drive/folders/1o_BjStOaJsSE65IzUkd1uMs0r7SIwMxq?usp=drive_link	75sENT	0	Đề thi HSG THCS tỉnh Ninh Bình năm học 2017-2018	2026-05-15 07:31:35.806411	all	400
+92	1	https://drive.google.com/drive/folders/1PZy2ZbhsMAcNikLADghai7hJrQ5LPhLE?usp=drive_link	gRMFJO	1	Đề thi HSG THCS tỉnh Phú Thọ năm học 2023-2024 - Cấp huyện	2026-05-15 08:13:08.746585	all	410
+93	1	https://drive.google.com/drive/folders/15fQT347tIWZ92wigUBszYbYQOiXTs-iI?usp=drive_link	fL4a9u	1	Đề thi HSG THCS tỉnh Quảng Nam năm học 2018-2019	2026-05-15 08:14:31.799681	all	411
+94	1	https://drive.google.com/drive/folders/1LOyVv-oBot9jJo8aYUUTEQ-PGJr-HaTb?usp=drive_link	c3Qprk	1	Đề thi HSG THCS tỉnh Quảng Nam năm học 2022-2023	2026-05-15 08:15:49.992953	all	412
+95	1	https://drive.google.com/drive/folders/1kvX0y6ronEBMRSumnVJw3nDblXkQWcFi?usp=drive_link	BwTW8G	1	Đề thi HSG THPT tỉnh Quảng Nam năm học 2023-2024	2026-05-15 08:19:05.6425	all	413
+96	1	https://drive.google.com/drive/folders/127g6DFC4ukE8J5RJPdnBxCuXiOnKrWCg?usp=drive_link	lxNFPu	0	Đề thi HSG THCS tỉnh Quảng Ninh năm học 2021-2022	2026-05-15 14:02:50.808954	all	414
+97	1	https://drive.google.com/drive/folders/1LmdN9as0sQswzaLKvlGOwP1rWTPI-QAg?usp=drive_link	Symc2O	0	Đề thi HSG THPT tỉnh Quảng Trị năm học 2021-2022	2026-05-15 14:04:20.708221	all	415
+98	1	https://drive.google.com/drive/folders/1oFNL2TVF5xXsXJisul_5VyYtHBfBep8y?usp=drive_link	bFMFrq	0	Đề thi Tuyển sinh 10 tỉnh Quảng Trị năm học 2022-2023	2026-05-15 14:07:23.25256	all	416
+99	1	https://drive.google.com/drive/folders/1EKOXlDyPyi97VUTdmdZlRjA39t-JDRUJ?usp=drive_link	Frd30P	0	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Thái Bình năm học 2023-2024 - Ngày 1	2026-05-15 14:10:41.528513	all	417
+100	1	https://drive.google.com/drive/folders/1ahPfp4npNcPii3igm_Knf4HZqG4jPfNK?usp=drive_link	vhWHxq	0	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Thanh Hóa năm học 2023-2024	2026-05-15 14:16:05.467616	all	418
+101	1	https://drive.google.com/drive/folders/1CgjQvw3GpUGmIOCuYlUCsOOCVXpAUUyd?usp=drive_link	FBgVQA	0	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Thanh Hóa năm học 2023-2024 - Cấp trường	2026-05-15 14:20:47.047473	all	419
+103	1	https://drive.google.com/drive/folders/1cbbA7ZRVRS9zT8esLoo81H4QGIRT0Q1F?usp=drive_link	WJJOLt	2	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Bà Rịa - Vũng Tàu năm học 2022-2023	2026-05-15 14:29:42.680998	all	421
+104	1	https://drive.google.com/drive/folders/14bOmbVou1LO0sIcGRb2J2v-52MN1fLI_?usp=drive_link	thAE2V	1	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Tiền Giang năm học 2022-2023 - Ngày 1	2026-05-15 14:32:24.910099	all	422
+105	1	https://drive.google.com/drive/folders/1B6dCskDN5813_pzVSMoLW9JS1QCBr6Jx?usp=drive_link	7gjpIa	0	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Tiền Giang năm học 2022-2023 - Ngày 2	2026-05-15 14:35:53.652182	all	423
+106	1	https://drive.google.com/drive/folders/1zrZgoddze7lrWi4z7OZHoY1wbY9GBJDd?usp=drive_link	7Xu9Aq	0	Đề thi Tuyển sinh 10 tỉnh Bà Rịa - Vũng Tàu năm học 2025-2026	2026-05-23 10:59:44.7619	all	424
+107	1	https://drive.google.com/drive/folders/1YWTAMW778o3QOj2HAO0MltSA6Bw9JecS?usp=drive_link	xzMzit	1	Đề thi HSG THCS tỉnh Khánh Hòa năm học 2016-2017	2026-05-23 11:04:55.636022	all	425
+203	1	https://drive.google.com/file/d/1whHHsnnzHuYR_2nuhbbsuqNzXc3nBnoy/view?usp=drive_link	Y8SDGK	1	<b>[fraction]</b> - Chọn đội tuyển Quốc gia tỉnh Thanh Hóa  2023-2024	2026-05-30 14:25:37.296599	Test	418
+108	1	https://drive.google.com/drive/folders/1skTuAvIZcdL12r4Bxc9Ze7LpfXPatQLu?usp=drive_link	iqs25w	1	Đề thi HSG Chọn đội tuyển tỉnh Bắc Ninh năm học 2024-2025 - Ngày 1	2026-05-23 11:07:43.74442	all	426
+102	1	https://drive.google.com/drive/folders/1rE5yrOde9n-fyaPqaxJuwaK34238p_tA?usp=drive_link	l7WZUX	0	Đề thi HSG Chọn đội tuyển Quốc gia TP Hải Phòng năm học 2024-2025 - Ngày 2	2026-05-15 14:24:04.688369	all	420
+206	1	https://drive.google.com/file/d/1WhXw6NhqzXHZ-JlZtITOLv-O5WudOoRW/view?usp=drive_link	fUBs77	3	<b>[Hướng dẫn]</b> - Chọn đội tuyển Quốc gia tỉnh Thái Bình  2023-2024 - Ngày 1	2026-05-30 14:26:43.098124	Hướng dẫn	417
+110	1	https://drive.google.com/drive/folders/15PxDHFoLELMFrzs8Fz7TNqIDam6PkC-Y?usp=drive_link	WCK86D	2	Đề thi HSG Chọn đội tuyển Quốc gia tỉnh Bắc Ninh năm học 2024-2025 - Ngày 2	2026-05-27 18:38:21.092675	all	427
+198	1	https://drive.google.com/file/d/1J0eVktdyqXh4-vjqntUQZJTHDLKOP6EP/view?usp=drive_link	XNf66O	0	<b>[maxgp]</b> - Chọn đội tuyển Quốc gia tỉnh Thanh Hóa  2023-2024 - Cấp trường	2026-05-30 14:24:35.276678	Test	419
+199	1	https://drive.google.com/file/d/19eaq200Zff-0SMiJLsq-Yo1kNs2ya6Eg/view?usp=drive_link	cXMuMt	0	<b>[Đề bài]</b> - Chọn đội tuyển Quốc gia tỉnh Thanh Hóa  2023-2024	2026-05-30 14:25:37.287004	Đề	418
+200	1	https://drive.google.com/file/d/1OWoY9eDifxoYuhbg_v_AilITYml5z_62/view?usp=drive_link	MwXYGe	0	<b>[Hướng dẫn]</b> - Chọn đội tuyển Quốc gia tỉnh Thanh Hóa  2023-2024	2026-05-30 14:25:37.2899	Hướng dẫn	418
+202	1	https://drive.google.com/file/d/1ty7jCQLIs92dfk12m8fnGiYl1PHqef39/view?usp=drive_link	tgy8ew	0	<b>[plant]</b> - Chọn đội tuyển Quốc gia tỉnh Thanh Hóa  2023-2024	2026-05-30 14:25:37.296599	Test	418
+205	1	https://drive.google.com/file/d/1FZvkd6M9hehRSOrP56pygjCggYRhZNFE/view?usp=drive_link	SitDfx	0	<b>[Đề bài]</b> - Chọn đội tuyển Quốc gia tỉnh Thái Bình  2023-2024 - Ngày 1	2026-05-30 14:26:43.092528	Đề	417
+204	1	https://drive.google.com/file/d/1UlqLoUmJ56Yy6Fy0-sSYLk-sJ8J6XAS3/view?usp=drive_link	9BkIIQ	1	<b>[bus]</b> - Chọn đội tuyển Quốc gia tỉnh Thanh Hóa  2023-2024	2026-05-30 14:25:37.296599	Test	418
+207	1	https://drive.google.com/file/d/1Zi3QS8lTkr3xuJ4-ghhYY8HnsK6IJwf0/view?usp=drive_link	B1hTRt	1	<b>[traveltb]</b> - Chọn đội tuyển Quốc gia tỉnh Thái Bình  2023-2024 - Ngày 1	2026-05-30 14:26:43.098124	Test	417
+208	1	https://drive.google.com/file/d/17ppUifNUaA9KB493VGl7kXE9jq3eO8J-/view?usp=drive_link	qnJqWZ	1	<b>[plant]</b> - Chọn đội tuyển Quốc gia tỉnh Thái Bình  2023-2024 - Ngày 1	2026-05-30 14:26:43.098124	Test	417
+201	1	https://drive.google.com/file/d/1Ae_QqJzumTiy3W8P4L_5cYU6Z187N_HX/view?usp=drive_link	fplOOJ	2	<b>[string]</b> - Chọn đội tuyển Quốc gia tỉnh Thanh Hóa  2023-2024	2026-05-30 14:25:37.296599	Test	418
+\.
+
+
+--
+-- Data for Name: user; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public."user" (id, username, password, role) FROM stdin;
+1	admin	pbkdf2:sha256:600000$o87JLx8Q89dhOT1d$a272abb3d6baa4d77c780c1d00cccef74ca8d67b1c801829e5a044c4740718fb	admin
+2	haiphong	pbkdf2:sha256:600000$kVzcLovkeViCKTlJ$2fcde8345a8132631b998a10976c7d2dc8a085de0cbd22b8f1fa6823afb6f358	user
+\.
+
+
+--
+-- Name: click_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.click_log_id_seq', 88, true);
+
+
+--
+-- Name: dethi_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.dethi_id_seq', 429, true);
+
+
+--
+-- Name: link_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.link_id_seq', 307, true);
+
+
+--
+-- Name: user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.user_id_seq', 2, true);
+
+
+--
+-- Name: alembic_version alembic_version_pkc; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.alembic_version
+    ADD CONSTRAINT alembic_version_pkc PRIMARY KEY (version_num);
+
+
+--
+-- Name: click_log click_log_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.click_log
+    ADD CONSTRAINT click_log_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dethi dethi_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.dethi
+    ADD CONSTRAINT dethi_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dethi dethi_title_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.dethi
+    ADD CONSTRAINT dethi_title_key UNIQUE (title);
+
+
+--
+-- Name: link link_original_url_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.link
+    ADD CONSTRAINT link_original_url_key UNIQUE (original_url);
+
+
+--
+-- Name: link link_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.link
+    ADD CONSTRAINT link_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user user_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."user"
+    ADD CONSTRAINT user_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user user_username_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."user"
+    ADD CONSTRAINT user_username_key UNIQUE (username);
+
+
+--
+-- Name: ix_link_short_code; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX ix_link_short_code ON public.link USING btree (short_code);
+
+
+--
+-- Name: link link_dethi_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.link
+    ADD CONSTRAINT link_dethi_id_fkey FOREIGN KEY (dethi_id) REFERENCES public.dethi(id);
+
+
+--
+-- Name: link link_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.link
+    ADD CONSTRAINT link_user_id_fkey FOREIGN KEY (user_id) REFERENCES public."user"(id);
+
+
+--
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE USAGE ON SCHEMA public FROM PUBLIC;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\unrestrict ZEspHlz7eYEpVMFI7z0HFuPfYXdoKegZc48aHa47LtJRiPuUw0wn2GY2UzgTgdQ
+
