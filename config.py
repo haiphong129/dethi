@@ -4,12 +4,17 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Config:
-    SECRET_KEY = os.getenv("SECRET_KEY", "dev-key")
+    # SECRET_KEY = os.getenv("SECRET_KEY", "dev-key")
 
-    #SQLALCHEMY_DATABASE_URI = "sqlite:///data.db"
-    SQLALCHEMY_DATABASE_URI = (
-    "postgresql://postgres:123456@localhost:5432/dethi"
-    )
+    # SQLALCHEMY_DATABASE_URI = (
+    # "postgresql://postgres:123456@localhost:5432/dethi"
+    # )
+    
+
+    SECRET_KEY = os.environ.get("SECRET_KEY","dev-secret" )
+
+    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
+
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     TURNSTILE_SITE_KEY = os.getenv("TURNSTILE_SITE_KEY")
