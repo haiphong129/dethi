@@ -153,7 +153,7 @@ def login():
     user = current_user()
 
     if user:
-        return redirect("/links")
+        return redirect("/dethi")
 
     error = None
 
@@ -229,7 +229,7 @@ def login():
             session["username"] = u.username
             session["role"] = u.role
 
-            return redirect("/links")
+            return redirect("/dethi")
 
     return render_template(
         "login.html",
@@ -876,7 +876,7 @@ def inject_global():
     )
 @app.route("/")
 def home():
-    return redirect("/links")
+    return redirect("/dethi")
 @app.route("/hp")
 def hp():
     # for de in Dethi.query.all():
