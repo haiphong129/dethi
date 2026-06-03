@@ -23,4 +23,4 @@ class Config:
     ALLOWED_OJ = ["codeforces.com", "atcoder.jp", "leetcode.com", "codechef.com", "hackerrank.com","cses.fi", "spoj.com", "uva.onlinejudge.org", "timus.onlinejudge.org", "kattis.com",
                   "codewars.com", "topcoder.com", "interviewbit.com", "geeksforgeeks.org", "hackerEarth.com", "projecteuler.net", "lightoj.com", "toph.co","oj.codedream.edu.vn",
                    "gymnasium.com", "oj.uz", "acmicpc.net", "yukicoder.me","lqdoj.com", "oj.vnoi.info","ojkhanhhoa.site","quangtrioj.edu.vn","ctoj.zapto.org","nhpoj.net","ctoj.net","oj.codejudge.edu.vn",
-                   "oj.clue.edu.vn","oj.hncode.edu.vn","lkoj.edu.vn","claoj.edu.vn","ptnkoj.com","sqrtoj.edu.vn","hnoj.edu.vn","oj.chuyentin.pro"]
+                   "oj.clue.edu.vn","oj.hncode.edu.vn","lkoj.edu.vn","claoj.edu.vn","ptnkoj.com","sqrtoj.edu.vn","hnoj.edu.vn","oj.chuyentin.pro","oj.cppro.vn"]
