@@ -18,7 +18,7 @@ class Dethi(db.Model):
     title = db.Column(db.String(500), nullable=False,unique=True,index=True)
     description = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.now, index=True)
-    links = db.relationship("Link", backref="dethi_obj", lazy=True,index=True)
+    links = db.relationship("Link", backref="dethi_obj", lazy=True)
     oj = db.Column(db.Text)
 
 class Link(db.Model):
