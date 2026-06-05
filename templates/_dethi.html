@@ -17,11 +17,18 @@
         {{ loop.index + (pagination.page - 1) * pagination.per_page }}.  
         {%if l.original_url %}
                 <a href="{{l.original_url }}" target="_blank" class="text-decoration-none text-primary">{{ l.title }}</a>
+        {%elif l.mota|length > 10%}
+            {%if l.debai %}
+                <a href="{{ url_for('danhgiadethi', idd=l.debai) }}" target="_blank" class="text-decoration-none text-primary">{{ l.title }}</a>
+            {%elif l.huongdan %}
+                <a href="{{ url_for('danhgiadethi', idd=l.huongdan) }}" target="_blank" class="text-decoration-none text-primary">{{ l.title }}</a>
+            {% else %}
+                <span class="">{{ l.title }}</span>
+            {% endif %}
         {%else%}
             <span class="">{{ l.title }}</span>
         {% endif %}
 
-        
     </td>
     <td>
         <div class="d-flex flex-wrap gap-0 align-items-center" style="min-width:0">
