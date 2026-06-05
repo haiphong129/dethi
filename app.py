@@ -154,16 +154,51 @@ def health():
 #Thống kê truy cập theo session
 @app.before_request
 def track_visitor():
-    ip = request.headers.get("X-Forwarded-For", request.remote_addr )
-    session = VisitorSession.query.filter_by(ip=ip).order_by(VisitorSession.last_visit.desc()).first()
+
+    # Bỏ qua static
+    if request.endpoint == "static":
+        return
+
+    # Bỏ qua favicon, robots...
+    if request.path in [
+        "/favicon.ico",
+        "/robots.txt",
+        "/sitemap.xml"
+    ]:
+        return
+
     now = datetime.now()
 
-    if (session is None or now - session.last_visit > timedelta(minutes=30)):
-        # session mới
-        db.session.add(VisitorSession(ip=ip,created_at=now,last_visit=now))
-    else:
-        session.last_visit = now
+    # Session hiện tại còn hiệu lực 30 phút
+    last_track = session.get("last_track")
+
+    if last_track:
+        try:
+            last_track = datetime.fromisoformat(last_track)
+
+            if now - last_track < timedelta(minutes=30):
+                return
+
+        except:
+            pass
+
+    ip = request.headers.get(
+        "X-Forwarded-For",
+        request.remote_addr
+    )
+
+    if ip:
+        ip = ip.split(",")[0].strip()
+
+    db.session.add(
+        VisitorSession(
+            ip=ip,
+            created_at=now,
+            last_visit=now
+        )
+    )
     db.session.commit()
+    session["last_track"] = now.isoformat()
 
 # --------------------
 # Auth
