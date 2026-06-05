@@ -1,7 +1,9 @@
-{% if request.path == '/dethi' %}
+{% if request.path in ['/dethi', '/createdethi'] 
+or request.path.startswith('/pushoj/') 
+or request.path.startswith('/danhgiadethi/') %}
 <div class="sidebar mb-3">
     <h4 class="mb-4">Tìm kiếm </h4>
-    <form action="{{ url_for('dethi') }}" method="get" class="row g-3">
+    <form  method="get" class="row g-3">
         <div class="col-12">
             <label for="loai_de" class="form-label text-success fw-bold">Đề thi</label>
             <select id="loai_de" name="loai_de" class="form-select">

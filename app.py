@@ -14,7 +14,8 @@ from sqlalchemy import func
 import os, requests, time, random, math
 import click
 import subprocess
-from datetime import datetime
+from datetime import datetime, timedelta
+import markdown
 
 app = Flask(__name__)
 app.jinja_env.add_extension('jinja2.ext.loopcontrols')
@@ -37,7 +38,7 @@ dethi_tk = {}
 namhoc_tk = {}
 tinhthanh_tk = {}
 link_tk = {}
-
+thongketruycap = 0
 # --------------------
 # Helpers
 # --------------------
@@ -122,9 +123,48 @@ def thongke(fn):
                     })
 
     return ds
+def thongketruycap():
+    now = datetime.now()
+
+    today = now.date()
+
+    start_week = (now - timedelta(days=now.weekday())).replace(hour=0,minute=0,second=0,microsecond=0)
+
+    start_month = now.replace(day=1,hour=0,minute=0,second=0,microsecond=0)
+
+    stats = {
+        "today": VisitorSession.query.filter(
+            func.date(VisitorSession.created_at) == today
+        ).count(),
+
+        "week": VisitorSession.query.filter(
+            VisitorSession.created_at >= start_week
+        ).count(),
+
+        "month": VisitorSession.query.filter(
+            VisitorSession.created_at >= start_month
+        ).count(),
+
+        "total": VisitorSession.query.count()
+    }
+    return stats
 @app.route("/health")
 def health():
     return "OK"
+#Thống kê truy cập theo session
+@app.before_request
+def track_visitor():
+    ip = request.headers.get("X-Forwarded-For", request.remote_addr )
+    session = VisitorSession.query.filter_by(ip=ip).order_by(VisitorSession.last_visit.desc()).first()
+    now = datetime.now()
+
+    if (session is None or now - session.last_visit > timedelta(minutes=30)):
+        # session mới
+        db.session.add(VisitorSession(ip=ip,created_at=now,last_visit=now))
+    else:
+        session.last_visit = now
+    db.session.commit()
+
 # --------------------
 # Auth
 # --------------------
@@ -314,6 +354,10 @@ def edit_dethi(idd=None):
         title = request.form["title"]
         debai = request.form["debai"]
         debai_id = request.form["debai_id"]
+        if "markdown_file" in request.files:
+            file = request.files["markdown_file"]
+            if file.filename != "":
+                dethi.description = file.read().decode('utf-8')
         
         l = Link.query.filter_by(original_url=debai).first()
         huongdan = request.form["huongdan"]
@@ -374,6 +418,7 @@ def edit_dethi(idd=None):
             else:
                 l.original_url = test[i-1]
                 l.title = tmp_title
+        
         db.session.commit()
 
     tmp={"id": dethi.id,"title": dethi.title, "original_url": "", "debai": "", "huongdan": "","debai_id": -1, "huongdan_id": -1}
@@ -683,6 +728,7 @@ def dethi():
             "title": l.title.replace("Đề thi HSG","").strip().replace("năm học","").strip(),
             "oj" : l.oj if l.oj else None
         }
+        tmp["mota"] = markdown.markdown(l.description if l.description else "",extensions=["tables","fenced_code","toc","nl2br","codehilite"])
         link = Link.query.filter_by(dethi_id=l.id).all()
         i=0
         for l in link:
@@ -712,7 +758,87 @@ def dethi():
         tinhthanh=tinhthanh,
         namhoc=namhoc
     )
+# --------------------
+# Danh sách Đề thi
+# --------------------
+@app.route("/danhgiadethi/", defaults={"code": None})
+@app.route("/danhgiadethi/<code>")
+def danhgiadethi(code=None):
+    user = current_user()
 
+    # =========================
+    # FILTER
+    # =========================
+
+    loaide = request.args.get("loai_de")
+    tinhthanh = request.args.get("tinh_thanh")
+    namhoc = request.args.get("nam_hoc")
+
+    # =========================
+    # QUERY
+    # =========================
+
+    query = Dethi.query.filter(Dethi.description != None).filter(Dethi.description != "").order_by(Dethi.created_at.desc())
+    
+
+    # =========================
+    # FILTER SQL
+    # =========================
+
+    if loaide: query = query.filter(Dethi.title.ilike(f"%{loaide}%"))
+    if tinhthanh: query = query.filter(Dethi.title.ilike(f"%{tinhthanh}%"))
+    if namhoc: query = query.filter(Dethi.title.ilike(f"%{namhoc}%"))
+    tmpx = query.all()
+    # =========================
+    # ORDER + PAGINATION
+    # =========================
+
+    dethi = query.first() if query else None
+    if not (loaide or tinhthanh or namhoc):
+        link = Link.query.filter_by(short_code=code).first()
+        if link: dethi = link.dethi_obj
+    
+    tmp = None
+
+    if dethi:
+        tmp = {
+            "id": dethi.id,
+            "title": dethi.title.replace("Đề thi HSG","").strip().replace("năm học","").strip(),
+            "oj" : dethi.oj if dethi.oj else None
+        }
+        tmp["mota"] = markdown.markdown(dethi.description if dethi.description else "",extensions=["tables","fenced_code","toc","nl2br","codehilite"])
+        link = Link.query.filter_by(dethi_id=dethi.id).all()
+        i=0
+        for l in link:
+            if tmp["oj"] is None: tmp["oj"] = l.short_code
+            if l.loai=="all":
+                tmp["original_url"] = l.original_url if user and user.role == "admin" else None
+            if l.loai == "Đề":
+                tmp["debai"] = l.short_code
+            if l.loai == "Hướng dẫn":
+                tmp["huongdan"] = l.short_code
+            if l.loai == "Test":
+                i+=1
+                tmp["test"+str(i)] = l.short_code
+                tmp["test"+str(i)+"_label"] = l.title.split("]</b>")[0].replace("<b>[","").strip()
+
+    
+    dsdethi = []
+    for d in tmpx:
+        dsdethi.append({
+            "id": d.id,
+            "title": d.title.replace("Đề thi HSG","").strip().replace("năm học","").strip(),
+            "code": Link.query.filter_by(dethi_id=d.id, loai="all").first().short_code if Link.query.filter_by(dethi_id=d.id, loai="all").first() else None
+        })
+
+    return render_template(
+        "danhgia_dethi.html",
+        dethi=tmp,
+        dsdethi=dsdethi,
+        loaide=loaide,
+        tinhthanh=tinhthanh,
+        namhoc=namhoc
+    )
 @app.route("/go_dethi/<idd>")
 def go_dethi(idd):
     dethi = Dethi.query.filter_by(id=idd).first()
@@ -872,8 +998,21 @@ def inject_global():
         dethi_tk=dict(sorted(dethi_tk.items(), key=lambda x: x[1], reverse=True)),
         namhoc_tk=dict(sorted(namhoc_tk.items(), key=lambda x: x[0],reverse=True)),
         tinhthanh_tk=dict(sorted(tinhthanh_tk.items(), key=lambda x: x[0], reverse=False)),
-        link_tk=dict(sorted(link_tk.items(), key=lambda x: x[1][0], reverse=True))
+        link_tk=dict(sorted(link_tk.items(), key=lambda x: x[1][0], reverse=True)),
+        thongketruycap=dict(thongketruycap())
     )
+@app.route("/about")
+def about():
+    return render_template("about.html")
+@app.route("/contact")
+def contact():
+    return render_template("contact.html")
+@app.route("/privacy")
+def privacy():
+    return render_template("privacy.html")
+@app.route("/terms")
+def terms():
+    return render_template("terms.html")
 @app.route("/")
 def home():
     return redirect("/dethi")

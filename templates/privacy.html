@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+	.privacy-container{max-width:900px;margin:30px auto;padding:24px;background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.06);font-family:Segoe UI, Roboto, "Helvetica Neue", Arial;color:#222}
+	.privacy-container h1{font-size:26px;margin-bottom:12px;color:#111}
+	.privacy-container p{line-height:1.6;margin:10px 0;color:#444}
+	.privacy-container a{color:#1a73e8;text-decoration:none}
+	.privacy-container a:hover{text-decoration:underline}
+	.privacy-meta{margin-top:18px;font-size:13px;color:#666}
+</style>
+
+<div class="privacy-container">
+	<h1>Chính sách bảo mật</h1>
+	<ul>
+		<li>Người dùng không cần phải đăng ký tài khoản để sử dụng dịch vụ.</li>
+		<li>Chúng tôi không thu thập bất kỳ thông tin cá nhân nào của người dùng. Tuy nhiên, chúng tôi có thể thu thập một số thông tin kỹ thuật như địa chỉ IP, loại trình duyệt và thời gian truy cập để cải thiện dịch vụ.</li>
+		<li>Chúng tôi cam kết không chia sẻ thông tin với bên thứ ba mà không có sự đồng ý của người dùng, trừ khi được yêu cầu bởi pháp luật.</li>
+		<li>Chúng tôi sử dụng các biện pháp bảo mật tiêu chuẩn để bảo vệ thông tin của người dùng khỏi truy cập trái phép, thay đổi, tiết lộ hoặc phá hủy.</li>
+		<li>Chính sách bảo mật này có thể được cập nhật theo thời gian. Vui lòng kiểm tra trang này định kỳ để biết các thay đổi.</li>
+		<li>Nếu bạn có bất kỳ câu hỏi nào về chính sách bảo mật, vui lòng liên hệ qua trang <a href="{{ url_for('contact') }}">Liên hệ</a>.</li>
+		<li>Các liên kết nộp bài trực tuyến (online judge) do người dùng cung cấp. Chúng tôi không chịu trách nhiệm về việc chuyển hướng đến các trang web bên thứ ba.</li>
+	</ul>
+	<div class="privacy-meta">Ngày cập nhật: 05/06/2026</div>
+</div>
+
+{% endblock %}

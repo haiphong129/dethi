@@ -40,3 +40,9 @@ class ClickLog(db.Model):
     device = db.Column(db.String(50))
     revenue = db.Column(db.Float, default=0)
     created_at = db.Column(db.DateTime, default=datetime.now)
+
+class VisitorSession(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    ip = db.Column(db.String(50))
+    last_visit = db.Column(db.DateTime)
+    created_at = db.Column(db.DateTime)

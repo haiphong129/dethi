@@ -9,3 +9,5 @@ requests
 psycopg2-binary
 gunicorn
 dotenv
+markdown
+pymdown-extensions

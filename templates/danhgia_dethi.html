@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Đánh giá đề thi{% endblock %}
+
+{% block content %}
+
+{% if dethi %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <h3>
+            {%if dethi.original_url %}
+                    <a href="{{dethi.original_url }}" target="_blank" class="text-decoration-none text-primary">{{ dethi.title }}</a>
+            {%else%}
+                <span class="">{{ dethi.title }}</span>
+            {% endif %}
+            </h3>
+            {% if "http" in dethi.oj %}
+            <div class="mb-2">
+                 <a href="{{ dethi.oj }}" target="_blank" class="btn btn-success btn-md px-1 py-1 m-0 text-truncate" >Link chấm bài online</a>
+            </div>
+            {% endif %}
+            <div class="mt-1">
+                <article class="markdown-body">
+                    {{ dethi.mota|safe if dethi.mota else "" }}
+                </article>
+            </div>
+            
+            <strong>Tải về:</strong><br>
+            <div class="d-flex flex-wrap gap-0 align-items-center" style="min-width:0">
+                {% if dethi.debai %}
+                    &nbsp;&nbsp;<a href="{{ request.host_url }}{{ dethi.debai }}" target="_blank" class="btn btn-success btn-sm px-1 py-1 m-0 text-truncate" >Đề bài</a>
+                {% endif %}
+                {% if dethi.huongdan %}
+                    &nbsp;&nbsp; <a href="{{ request.host_url }}{{ dethi.huongdan }}" target="_blank" class="btn btn-warning btn-sm px-1 py-1 m-0 text-truncate" >Hướng dẫn</a>
+                {% endif %}
+                
+                {% for i in range(1,6) %}
+                    {% if dethi["test"+i|string] %}
+                        &nbsp;&nbsp; <a href="{{ request.host_url }}{{ dethi["test"+i|string] }}" target="_blank" class="btn btn-info btn-sm px-1 py-1 m-0 text-truncate" >Testcase: {{ dethi["test"+i|string+ "_label"] }}</a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+{% else %}
+    <div class="alert alert-info">Chưa có đề thi <b>
+        {%if loaide%}{{ loaide }} {%endif%}
+        {%if tinhthanh%} tỉnh {{ tinhthanh }} {%endif%}
+        {%if namhoc%} năm học {{ namhoc }} {%endif%}</b>
+        nào được đánh giá.
+    </div>
+{% endif %}
+{% if dsdethi|length > 0 %}
+    <h2 class="mt-4 mb-3">Các đề thi đã được đánh giá gần đây</h2>
+{% endif %}
+{% for d in dsdethi %}
+    <h6>{{ loop.index }}.
+    {%if d.code %}
+            <a href="{{ url_for('danhgiadethi', code=d.code) }}" target="_blank" class="text-decoration-none text-primary">{{ d.title }}</a>
+    {%else%}
+        <span class="">{{ d.title }}</span>
+    {% endif %}
+    </h6>  
+{% endfor %}
+{% endblock %}

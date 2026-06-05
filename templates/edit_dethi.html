@@ -11,7 +11,7 @@
         <div class="card shadow-sm mx-auto" style="max-width: 600px;">
             <div class="card-body">
                 <h4 class="card-title mb-4">Sửa Đề thi</h4>
-                <form method="post" action="{{ url_for('edit_dethi', idd=dethi.id) }}">
+                <form method="post" action="{{ url_for('edit_dethi', idd=dethi.id) }}" enctype="multipart/form-data">
                     <input type="hidden" name="id" value="{{dethi.id}}">
                     <div class="mb-3">
                         <label class="form-label fw-bold" for="url">Đường dẫn:</label>
@@ -29,6 +29,10 @@
                     <div class="mb-3">
                         <label class="form-label fw-bold" for="huongdan">Hướng dẫn:</label>
                         <input id="huongdan" name="huongdan" class="form-control" placeholder="Hướng dẫn" value="{{dethi.huongdan}}">
+                        <div class="mt-2">
+                            <label class="form-label">Upload file Markdown:</label>
+                            <input id="markdown_file" name="markdown_file" type="file" accept=".md,.markdown,text/markdown" class="form-control" />
+                        </div>
                         <input id="huongdan_id" name="huongdan_id" type="hidden" value="{{dethi.huongdan_id}}">
                     </div>
                     <div class="mb-3">
@@ -52,12 +56,14 @@
                         <input id="test5" name="test5_label" class="form-control p-1 m-1" placeholder="Test bài 5" value="{{dethi.test5_label}}">
                         <input id="test5" name="test5" class="form-control p-1 m-1 md-2" placeholder="Link test bài 5" value="{{dethi.test5}}">
                         <input id="test5_id" name="test5_id" type="hidden" value="{{dethi.test5_id}}">
+                        
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Submit</button>
                 </form>
             </div>
         </div>
     </div>
+    
     <script>
         document.addEventListener('keydown', function(e) {
             if (e.ctrlKey && e.key === 's') {
@@ -65,6 +71,7 @@
                 document.querySelector('form').submit();
             }
         });
+        
     </script>
 {% endif %}
 {% endblock %}

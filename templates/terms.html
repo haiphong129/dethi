@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="terms-list" style="background: #f8f9fb; padding: 1.25rem 1.5rem; border-radius: 1rem; box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);">
+    <ul class="styled-list" style="list-style: disc inside; margin: 0; padding: 0; color: #2f3440; line-height: 1.8;">
+      <li style="margin-bottom: 0.9rem;">Các đề thi trong website này cho phép người dùng tải về miễn phí để phục vụ cho việc học tập, ôn luyện và tham khảo.</li>
+      <li style="margin-bottom: 0.9rem;">Tất cả các đề thi đều được sưu tầm từ nhiều nguồn khác nhau trên Internet, và chúng tôi không sở hữu bản quyền của bất kỳ đề thi nào. Chúng tôi cam kết sẽ gỡ bỏ bất kỳ đề thi nào nếu có yêu cầu hợp pháp từ chủ sở hữu bản quyền.</li>
+      <li style="margin-bottom: 0.9rem;">Nếu bạn là chủ sở hữu bản quyền của một đề thi và muốn yêu cầu gỡ bỏ, vui lòng liên hệ với chúng tôi qua trang <a href="{{ url_for('contact') }}">Liên hệ</a>.</li>
+      <li style="margin-bottom: 0.9rem;">Chúng tôi không chấp nhận bất kỳ hình thức mua bán đề thi nào trên trang web này. Mọi đề thi được cung cấp hoàn toàn miễn phí và không có bất kỳ chi phí nào liên quan đến việc tải về hoặc sử dụng chúng.</li>
+      <li>Nếu bạn gặp phải bất kỳ trường hợp nào liên quan đến việc mua bán đề thi, vui lòng báo cáo cho chúng tôi ngay lập tức để chúng tôi có thể xử lý kịp thời.</li>
+    </ul>
+  </div>
+
+{% endblock %}
