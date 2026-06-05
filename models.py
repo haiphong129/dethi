@@ -15,27 +15,27 @@ class User(db.Model):
 
 class Dethi(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(500), nullable=False,unique=True)
+    title = db.Column(db.String(500), nullable=False,unique=True,index=True)
     description = db.Column(db.Text)
-    created_at = db.Column(db.DateTime, default=datetime.now)
-    links = db.relationship("Link", backref="dethi_obj", lazy=True)
+    created_at = db.Column(db.DateTime, default=datetime.now, index=True)
+    links = db.relationship("Link", backref="dethi_obj", lazy=True,index=True)
     oj = db.Column(db.Text)
 
 class Link(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False, index=True)
     original_url = db.Column(db.String(500), nullable=False, unique=True)
     short_code = db.Column(db.String(10), unique=True, default=gen_code,index=True)
     clicks = db.Column(db.Integer, default=0)
     title = db.Column(db.String(200)) #Tiêu đề
-    created_at = db.Column(db.DateTime, default=datetime.now)
-    loai = db.Column(db.String(20), default="Khác") #Loại link: Khác; Đề; Hướng dẫn; Test; all (toàn bộ)
+    created_at = db.Column(db.DateTime, default=datetime.now, index=True)
+    loai = db.Column(db.String(20), default="Khác", index=True) #Loại link: Khác; Đề; Hướng dẫn; Test; all (toàn bộ)
     dethi_id = db.Column(db.Integer, db.ForeignKey("dethi.id"))
 
 class ClickLog(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    link_id = db.Column(db.Integer)
-    user_id = db.Column(db.Integer)
+    link_id = db.Column(db.Integer, index=True)
+    user_id = db.Column(db.Integer, index=True)
     country = db.Column(db.String(100))
     device = db.Column(db.String(50))
     revenue = db.Column(db.Float, default=0)
@@ -43,6 +43,6 @@ class ClickLog(db.Model):
 
 class VisitorSession(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    ip = db.Column(db.String(50))
-    last_visit = db.Column(db.DateTime)
-    created_at = db.Column(db.DateTime)
+    ip = db.Column(db.String(50), index=True)
+    last_visit = db.Column(db.DateTime,index=True)
+    created_at = db.Column(db.DateTime,index=True)
