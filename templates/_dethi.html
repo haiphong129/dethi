@@ -32,11 +32,7 @@
     </td>
     <td>
         <div class="d-flex flex-wrap gap-0 align-items-center" style="min-width:0">
-        {% if "http" in l.oj %}
-            <a href="{{ l.oj }}" target="_blank" class="btn btn-success btn-sm px-1 py-1 m-0 text-truncate" style="min-width:0; transform: scale(0.8); transform-origin: left center;">OJ</a>
-        {% else %}
-            <a href="{{ url_for('pushoj', code=l.oj) }}" target="_blank" class="btn btn-danger btn-sm px-1 py-1 m-0 text-truncate" style="min-width:0; transform: scale(0.8); transform-origin: left center;" title="Thêm link OJ">add OJ</a>
-        {% endif %}
+        
         {% if l.debai %}
             <a href="{{ request.host_url }}{{ l.debai }}" target="_blank" class="btn btn-success btn-sm px-1 py-1 m-0 text-truncate" style="min-width:0; transform: scale(0.8); transform-origin: left center;">Đề bài</a>
         {% endif %}
@@ -48,6 +44,12 @@
                 <a href="{{ request.host_url }}{{ l["test"+i|string] }}" target="_blank" class="btn btn-info btn-sm px-1 py-1 m-0 text-truncate" style="min-width:0; transform: scale(0.8); transform-origin: left center;">{{ l["test"+i|string+ "_label"] }}</a>
             {% endif %}
         {% endfor %}
+        {% if "http" in l.oj %}
+            <a href="{{ l.oj }}" target="_blank" class="btn btn-success btn-sm px-1 py-1 m-0 text-truncate" style="min-width:0; transform: scale(0.8); transform-origin: left center;">OJ</a>
+        {% else %}
+            <a href="{{ url_for('pushoj', code=l.oj) }}" target="_blank" class="btn btn-danger btn-sm px-1 py-1 m-0 text-truncate" style="min-width:0; transform: scale(0.8); transform-origin: left center;" title="Thêm link OJ">add OJ</a>
+        {% endif %}
+        
         </div>
     </td>
     
