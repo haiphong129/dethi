@@ -628,7 +628,19 @@ def captcha(code):
         return "Xác minh thất bại"
     total_clicks = db.session.query(func.sum(Link.clicks)).scalar() or 0
 
-    return render_template("captcha.html", site_key=app.config["TURNSTILE_SITE_KEY"],title=link.title,total_clicks=total_clicks)
+    dethi = link.dethi_obj
+    alllink = Link.query.filter_by(dethi_id=dethi.id).all()
+    all ={} 
+    
+    for l in alllink:
+        if l.id == link.id: continue
+        if l.loai == "Đề":
+            all["Đề bài"] = l.short_code
+        if l.loai == "Hướng dẫn":
+            all["Hướng dẫn"] = l.short_code
+        if l.loai == "Test":
+            all["Test "+l.title.split("]</b>")[0].replace("<b>[","").strip()] = l.short_code
+    return render_template("captcha.html", site_key=app.config["TURNSTILE_SITE_KEY"],title=link.title,total_clicks=total_clicks,all=all)
 
 # --------------------
 # ADS

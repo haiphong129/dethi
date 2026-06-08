@@ -11,6 +11,12 @@
     <br>
     <button id="btn" disabled class="btn btn-primary">Tiếp tục</button>
 </form>
+<h4 class="mt-4 text-success text-bold">Các link liên quan trong đề thi</h4>
+<div class="d-flex flex-wrap gap-2">
+    {% for key in all %}
+    <a class="btn btn-outline-primary btn-sm" href="{{ request.host_url + all[key] }}" target="_blank" role="button">{{ key }}</a>
+    {% endfor %}
+</div>
 
 <script>
 function onSuccess() {
