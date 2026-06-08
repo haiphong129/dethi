@@ -155,6 +155,9 @@ def health():
 @app.before_request
 def track_visitor():
 
+    if current_user() and current_user().role == "admin":
+        return
+
     # Bỏ qua static
     if request.endpoint == "static":
         return
