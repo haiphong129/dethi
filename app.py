@@ -155,6 +155,19 @@ def health():
 @app.before_request
 def track_visitor():
 
+    BOT_KEYWORDS = [
+    "facebookexternalhit",
+    "Facebot",
+    "Googlebot",
+    "bingbot",
+    "TelegramBot",
+    "Slackbot"
+    ]
+    ua = request.headers.get("User-Agent", "")
+    bot = any(keyword.lower() in ua.lower()for keyword in BOT_KEYWORDS)
+    if bot: return
+    if request.method != "GET":return
+
     if current_user() and current_user().role == "admin":
         return
 
